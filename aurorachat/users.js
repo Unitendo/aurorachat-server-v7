@@ -82,6 +82,10 @@ User.prototype.checkFlag = function(flag) {
     return this.flags.includes(flag)
 }
 
+User.prototype.deleteUser = function() {
+    delete users[this.uid]
+}
+
 User.USERNAME_REGEX = /^[a-z0-9\ \.\,\-\/\\\|\:\;]{2,32}$/i
 
 /**
@@ -120,6 +124,14 @@ User.getUser = function(uid) {
  */
 User.getUserByLogin = function(login) {
     return Object.values(users).find(v => v.login === login)
+}
+
+/**
+ * @param {String} ip 
+ * @returns {User[]}
+ */
+User.getUsersByIP = function(ip) {
+    return Object.values(users).filter(v => v.createIP === ip || v.loginIP === ip)
 }
 
 /**
@@ -177,18 +189,26 @@ function trySaveUsers() {
     fs.writeFileSync(USERFILE, data)
 }
 
-function onexit() {
-    trySaveUsers()
-    console.log('Exiting cleanly.')
-    process.exit(0)
+/**
+ * @param {Number} delay
+ */
+function userSaveInterval(delay) {
+    setInterval(trySaveUsers, delay * 1000)
 }
 
-process.on('SIGINT', onexit)
-process.on('SIGUSR2', onexit)
+function onexit() {
+    console.log('Exiting cleanly.')
+    trySaveUsers()
+}
+
+process.on('exit', onexit)
+process.on('SIGINT', () => process.exit(0))
+process.on('SIGUSR2', () => process.exit(0))
 
 module.exports = User
 module.exports.checkIPBan = checkIPBan
 module.exports.banIP = banIP
 module.exports.unbanIP = unbanIP
+module.exports.userSaveInterval = userSaveInterval
 
 tryLoadUsers()

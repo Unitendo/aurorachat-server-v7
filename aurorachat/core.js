@@ -141,8 +141,7 @@ CoreServer.prototype.send = function(msg) {
  */
 CoreServer.prototype.computeIP = function(rawip) {
     const a = new ip.Address6(rawip)
-    const canon = a.canonicalForm()
-    return canon
+    return a.correctForm()
 }
 
 /**
@@ -153,5 +152,17 @@ CoreServer.prototype.checkIPBan = function(ip) {
     return users.checkIPBan(ip)
 }
 
+/**
+ * @param {String} login 
+ * @returns {users | undefined}
+ */
+CoreServer.prototype.getUserByLogin = login => users.getUserByLogin(login)
+/**
+ * @param {String} ip 
+ * @returns {users[]}
+ */
+CoreServer.prototype.getUsersByIP = ip => users.getUsersByIP(ip)
+
 module.exports = CoreServer
 module.exports.CoreClient = CoreClient
+module.exports.userSaveInterval = users.userSaveInterval

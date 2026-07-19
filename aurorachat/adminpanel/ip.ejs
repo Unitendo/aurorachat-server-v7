@@ -1,0 +1,18 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>Aurorachat Admin Panel - IP lookup</title>
+    </head>
+    <body>
+        <h1>IP</h1>
+        <a href="/adminpanel/">Back</a>
+        <p>
+            Users matching IP:<br>
+            <% for(const u of users) { %>
+                <a href="/adminpanel/user?user=<%- u.login %>" target="_blank"><%- u.login %></a><br>
+            <% } %>
+        </p>
+    </body>
+</html>

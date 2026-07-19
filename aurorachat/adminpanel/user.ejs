@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>Aurorachat Admin Panel - User lookup</title>
+    </head>
+    <body>
+        <h1>User</h1>
+        <a href="/adminpanel/">Back</a><br>
+        <p>
+            <b>User ID</b> - <%- user.uid %><br>
+            <b>Login</b> - <%- user.login %><br>
+            <b>Password hash</b> - <%- user.passwd %><br>
+            <b>Flags</b> - <% if(user.flags.length) { %> <%- user.flags.join(', ') %> <% } else { %> <i>[none]</i> <% } %> <br>
+            <b>Ban reason</b> - <% if(user.banreason) { %> <%- user.banreason %> <% } else { %> <i>[none]</i> <% } %><br>
+            <b>Creation IP</b> - <a href="/adminpanel/ip?ip=<%- user.createIP %>"><%- user.createIP %></a><br>
+            <b>Last login IP</b> - <a href="/adminpanel/ip?ip=<%- user.loginIP %>"><%- user.loginIP %></a><br>
+        </p>
+        <form action="/adminpanel/flags" method="post">
+            <h2>Flag modification</h2>
+            <input type="hidden" name="user" value="<%- user.login %>">
+            Flag name: <input type="text" name="flag" list="flags"><br>
+            Add flag <input type="radio" name="mode" value="add" checked><br>
+            Remove flag <input type="radio" name="mode" value="remove"><br>
+            <button type="submit">Modify</button>
+
+            <datalist id="flags">
+                <option value="BANNED"></option>
+                <option value="MUTED"></option>
+            </datalist>
+        </form>
+
+        <form action="/adminpanel/banreason" method="post">
+            <h2>Ban reason</h2>
+            <input type="hidden" name="user" value="<%- user.login %>">
+            Ban reason: <input type="text" name="banreason" value="<%- user.banreason %>"><br>
+            <button type="submit">Set</button>
+        </form>
+
+        <form action="/adminpanel/deleteuser" method="post">
+            <h2>Ban reason</h2>
+            <input type="hidden" name="user" value="<%- user.login %>">
+            I want to actually delete this user <input type="checkbox" name="safety"><br>
+            <button type="submit">Delete</button>
+        </form>
+    </body>
+</html>

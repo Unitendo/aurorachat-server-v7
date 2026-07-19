@@ -11,7 +11,12 @@
   "description": "Aurorachat V7 Server",
   "dependencies": {
     "bcrypt": "^6.0.0",
+    "body-parser": "^2.3.0",
+    "cookie-parser": "^1.4.7",
+    "ejs": "^6.0.1",
+    "express": "^5.2.1",
     "ip-address": "^10.2.0",
+    "jsonwebtoken": "^9.0.3",
     "uuid": "^14.0.1",
     "ws": "^8.21.1"
   }

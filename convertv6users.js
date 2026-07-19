@@ -10,8 +10,7 @@ const ip = require('ip-address')
  */
 function computeIP(rawip) {
     const a = new ip.Address6(rawip)
-    const canon = a.canonicalForm()
-    return canon
+    return a.correctForm()
 }
 
 if(process.argv.length < 3) {
