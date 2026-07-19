@@ -1,0 +1,18 @@
+{
+  "name": "aurorachat-v7-server",
+  "version": "0.7.0",
+  "main": "server.js",
+  "scripts": {
+    "dev": "npx nodemon"
+  },
+  "keywords": [],
+  "author": "JakubKwantowy",
+  "license": "GPL-3.0-only",
+  "description": "Aurorachat V7 Server",
+  "dependencies": {
+    "bcrypt": "^6.0.0",
+    "ip-address": "^10.2.0",
+    "uuid": "^14.0.1",
+    "ws": "^8.21.1"
+  }
+}
