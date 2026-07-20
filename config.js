@@ -28,5 +28,5 @@ Please do not vent in our server. Neither our staff or members are therapists, a
 #8 No Dark Topics
 Please do not joke or discuss about serious topics, not limited to but including, suicide, self harm, excessive violence, abuse, etc.
 
-#10 No Discussing Punishments
+#9 No Discussing Punishments
 Please do not discuss/ask why a member got a punishment. If they were an important member of the community, an explanation will be provided soon.`

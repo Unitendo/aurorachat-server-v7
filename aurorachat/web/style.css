@@ -1,0 +1,42 @@
+html, body {
+    margin: 0;
+    padding: 0;
+
+    height: 100%;
+}
+
+#welcome {
+    padding: 0.5em;
+}
+
+#loginform {
+    padding: 0.5em;
+    display: none;
+}
+
+#chatui {
+    display: none;
+    height: 100%;
+    flex-direction: column;
+}
+
+#roominput {
+    display: flex;
+}
+
+#room {
+    flex: 1;
+}
+
+#messages {
+    flex: 1;
+    overflow: scroll;
+}
+
+#msginput {
+    display: flex;
+}
+
+#msg {
+    flex: 1;
+}

@@ -220,6 +220,11 @@ const WebServer = function(core, port) {
     app.use(cookieParser())
     adminpanel(core, app)
 
+    app.use('/web/', express.static(path.join(__dirname, 'web')))
+    app.get('/', (req, res) => {
+        res.redirect('/web/')
+    })
+
     app.listen(port, () => console.log('Web server on port', port))
 }
 

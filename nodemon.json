@@ -1,3 +1,6 @@
 {
-    "ignore": ["aurorachat/data/*"]
+    "ignore": [
+        "aurorachat/data/*",
+        "aurorachat/web/*"
+    ]
 }
