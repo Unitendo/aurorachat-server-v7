@@ -123,9 +123,11 @@ CoreServer.prototype.connect = function(ip, onsend) {
 CoreServer.prototype.send = function(msg) {
     console.log(msg)
 
-    if(!(msg.room in this.history)) this.history[msg.room] = []
-    this.history[msg.room].push(msg)
-    this.history[msg.room] = this.history[msg.room].slice(-this.maxroomhistory)
+    if(msg.room) {
+        if(!(msg.room in this.history)) this.history[msg.room] = []
+        this.history[msg.room].push(msg)
+        this.history[msg.room] = this.history[msg.room].slice(-this.maxroomhistory)
+    }
 
     for(const c of this.clients) {
         if(!c.login) continue

@@ -26,6 +26,6 @@ process.stdin.on('data', data => {
     core.send({
         author: '[SERVER]',
         room: undefined,
-        content: msg
+        content: msg.trim()
     })
 })

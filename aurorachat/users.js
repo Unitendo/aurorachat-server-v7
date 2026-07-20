@@ -2,9 +2,10 @@ const uuid = require('uuid').v4
 const bcrypt = require('bcrypt')
 const fs = require('fs')
 const path = require('path')
+const zlib = require('zlib')
 
 const HASH_ROUNDS = 12
-const USERFILE = path.join(__dirname, 'data', 'users.json')
+const USERFILE = path.join(__dirname, 'data', 'users.json.gz')
 
 /**
  * @typedef {String} uid
@@ -167,7 +168,8 @@ function unbanIP(ip){
 function tryLoadUsers() {
     try {
         console.log('Loading users.')
-        const data = fs.readFileSync(USERFILE, 'utf-8')
+        const compressed = fs.readFileSync(USERFILE)
+        const data = zlib.gunzipSync(compressed).toString('utf-8')
         const json = JSON.parse(data)
         for(const u of json.users) {
             users[u.uid] = new User(u.uid, u.login, u.passwd, u.flags, u.banreason, u.createIP, u.loginIP)
@@ -186,7 +188,8 @@ function trySaveUsers() {
         users: Object.values(users),
         ipbans
     })
-    fs.writeFileSync(USERFILE, data)
+    const compressed = zlib.gzipSync(Buffer.from(data, 'utf-8'))
+    fs.writeFileSync(USERFILE, compressed)
 }
 
 /**
