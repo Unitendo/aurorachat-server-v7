@@ -1,7 +1,15 @@
 exports.TCP_PORT = 7070
 exports.WS_PORT = 7071
+exports.WEB_PORT = 7080
 exports.SERVER_NAME = 'Unnamed Aurorachat V7 Server'
 exports.MAX_ROOM_HISTORY = 128
+exports.USER_SAVE_INTERVAL = 720
+exports.PLUGINS = ['hausmeister']
+exports.PLUGIN_CONFIG = {
+    hausmeister: {
+        name: '[HAUSMEISTER]'
+    }
+}
 exports.SERVER_RULES = `#1 Be Respectful
 Please respect other members, whether that be their religion, identity, sexuality, or beliefs. We however, do not tolerate bigotry or hateful beliefs. We do not tolerate slurs, either.
 
@@ -26,5 +34,5 @@ Please do not vent in our server. Neither our staff or members are therapists, a
 #8 No Dark Topics
 Please do not joke or discuss about serious topics, not limited to but including, suicide, self harm, excessive violence, abuse, etc.
 
-#10 No Discussing Punishments
+#9 No Discussing Punishments
 Please do not discuss/ask why a member got a punishment. If they were an important member of the community, an explanation will be provided soon.`

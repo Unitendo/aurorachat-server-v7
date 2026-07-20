@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>Aurorachat Web</title>
+        <script src="v7.js"></script>
+        <link rel="stylesheet" href="style.css">
+    </head>
+    <body>
+        <div id="welcome">
+            Welcome to Aurorachat!<br>
+            <button id="welcome-login">Log in</button>
+            <button id="welcome-register">Sign up</button>
+        </div>
+
+        <form id="loginform">
+            Login: <input type="text" name="login"><br>
+            Password: <input type="password" name="passwd"><br>
+            <button type="submit">Log in</button>
+        </form>
+
+        <label id="chatui" for="msg">
+            <form id="roominput">
+                #
+                <input type="text" name="room" id="room" value="general">
+                <button type="submit">Join</button>
+            </form>
+            <pre id="messages"></pre>
+            <form id="msginput">
+                <input type="text" name="msg" id="msg">
+                <button type="submit">Send</button>
+            </form>
+        </label>
+    </body>
+</html>

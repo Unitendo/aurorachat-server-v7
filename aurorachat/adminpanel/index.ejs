@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>Aurorachat Admin Panel</title>
+    </head>
+    <body>
+        <fieldset>
+            <legend><b>User lookup</b></legend>
+            <form action="/adminpanel/user">
+                Username: <input type="text" name="user"><br>
+                <% if(req.query.lookup_err) { %>
+                <div style="color: red">User not found!</div>
+                <% } %>
+                <button type="submit">Find</button>
+            </form>
+        </fieldset>
+
+        <fieldset>
+            <legend><b>BCrypt Password</b></legend>
+            <form action="/adminpanel/bcrypt" method="post">
+                Password: <input type="text" name="passwd"><br>
+                <% if(req.query.hash) { %>
+                <pre><%- req.query.hash %> </pre>
+                <% } %>
+                <button type="submit">Hash</button>
+            </form>
+        </fieldset>
+    </body>
+</html>

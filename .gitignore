@@ -1,3 +1,4 @@
 node_modules/
 aurorachat/data/
 package-lock.json
+config.js

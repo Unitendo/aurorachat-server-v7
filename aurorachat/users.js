@@ -2,9 +2,10 @@ const uuid = require('uuid').v4
 const bcrypt = require('bcrypt')
 const fs = require('fs')
 const path = require('path')
+const zlib = require('zlib')
 
 const HASH_ROUNDS = 12
-const USERFILE = path.join(__dirname, 'data', 'users.json')
+const USERFILE = path.join(__dirname, 'data', 'users.json.gz')
 
 /**
  * @typedef {String} uid
@@ -82,6 +83,10 @@ User.prototype.checkFlag = function(flag) {
     return this.flags.includes(flag)
 }
 
+User.prototype.deleteUser = function() {
+    delete users[this.uid]
+}
+
 User.USERNAME_REGEX = /^[a-z0-9\ \.\,\-\/\\\|\:\;]{2,32}$/i
 
 /**
@@ -123,6 +128,14 @@ User.getUserByLogin = function(login) {
 }
 
 /**
+ * @param {String} ip 
+ * @returns {User[]}
+ */
+User.getUsersByIP = function(ip) {
+    return Object.values(users).filter(v => v.createIP === ip || v.loginIP === ip)
+}
+
+/**
  * @type {String[]}
  */
 const ipbans = []
@@ -155,7 +168,8 @@ function unbanIP(ip){
 function tryLoadUsers() {
     try {
         console.log('Loading users.')
-        const data = fs.readFileSync(USERFILE, 'utf-8')
+        const compressed = fs.readFileSync(USERFILE)
+        const data = zlib.gunzipSync(compressed).toString('utf-8')
         const json = JSON.parse(data)
         for(const u of json.users) {
             users[u.uid] = new User(u.uid, u.login, u.passwd, u.flags, u.banreason, u.createIP, u.loginIP)
@@ -174,21 +188,30 @@ function trySaveUsers() {
         users: Object.values(users),
         ipbans
     })
-    fs.writeFileSync(USERFILE, data)
+    const compressed = zlib.gzipSync(Buffer.from(data, 'utf-8'))
+    fs.writeFileSync(USERFILE, compressed)
+}
+
+/**
+ * @param {Number} delay
+ */
+function userSaveInterval(delay) {
+    setInterval(trySaveUsers, delay * 1000)
 }
 
 function onexit() {
-    trySaveUsers()
     console.log('Exiting cleanly.')
-    process.exit(0)
+    trySaveUsers()
 }
 
-process.on('SIGINT', onexit)
-process.on('SIGUSR2', onexit)
+process.on('exit', onexit)
+process.on('SIGINT', () => process.exit(0))
+process.on('SIGUSR2', () => process.exit(0))
 
 module.exports = User
 module.exports.checkIPBan = checkIPBan
 module.exports.banIP = banIP
 module.exports.unbanIP = unbanIP
+module.exports.userSaveInterval = userSaveInterval
 
 tryLoadUsers()
