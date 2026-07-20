@@ -18,6 +18,9 @@ const ip = require('ip-address')
 const CoreClient = function(server, ip, onsend) {
     this.server = server
     this.user = undefined
+    /**
+     * @type {String | undefined}
+     */
     this.room = undefined
     this.ip = ip
     this.onsend = onsend
@@ -82,12 +85,27 @@ CoreClient.prototype.send = function(msg) {
     if(!this.user) return
     if(!this.room) return
     if(this.user.checkFlag(users.USER_FLAGS.muted)) return
-    this.server.send({
+    
+    let mobj = {
         author: this.user.login,
         room: this.room,
         content: msg
-    })
+    }
+
+    for(const p of this.server.plugins) {
+        if(!mobj) return
+        mobj = p(mobj)
+    }
+
+    if(!mobj) return
+    this.server.send(mobj)
 }
+
+/**
+ * @callback PluginMessageCallback
+ * @param {Message} msg
+ * @returns {Message}
+ */
 
 /**
  * @param {Number} maxroomhistory
@@ -104,6 +122,11 @@ const CoreServer = function(maxroomhistory, serverrules) {
      */
     this.history = {}
     this.maxroomhistory = maxroomhistory
+
+    /**
+     * @type {PluginMessageCallback[]}
+     */
+    this.plugins = []
 }
 
 /**
@@ -152,6 +175,18 @@ CoreServer.prototype.computeIP = function(rawip) {
  */
 CoreServer.prototype.checkIPBan = function(ip) {
     return users.checkIPBan(ip)
+}
+
+/**
+ * @param {String[]} pluginlist 
+ * @param {Object.<string, any>} pluginconfig
+ */
+CoreServer.prototype.loadPlugins = function(pluginlist, pluginconfig) {
+    for(const p of pluginlist) {
+        const m = require(`./plugins/${p}`)
+        const f = m(this, pluginconfig[p])
+        this.plugins.push(f)
+    }
 }
 
 /**

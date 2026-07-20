@@ -18,6 +18,7 @@ const core = new Core(config.MAX_ROOM_HISTORY, config.SERVER_RULES)
 tcpserver(core, config.TCP_PORT, config.SERVER_NAME)
 wsserver(core, config.WS_PORT, config.SERVER_NAME)
 webstuff(core, config.WEB_PORT)
+core.loadPlugins(config.PLUGINS, config.PLUGIN_CONFIG)
 
 Core.userSaveInterval(config.USER_SAVE_INTERVAL)
 

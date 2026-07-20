@@ -35,9 +35,8 @@ window.addEventListener('load', e => {
         }
     })
 
-    socket.addEventListener('open', e => {
-        welcomediv.style.display = 'none'
-        socket.send('login|jakub|gaming|')
+    socket.addEventListener('close', e => {
+        location.reload()
     })
 
     /**

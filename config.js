@@ -4,6 +4,12 @@ exports.WEB_PORT = 7080
 exports.SERVER_NAME = 'Unnamed Aurorachat V7 Server'
 exports.MAX_ROOM_HISTORY = 128
 exports.USER_SAVE_INTERVAL = 720
+exports.PLUGINS = ['hausmeister']
+exports.PLUGIN_CONFIG = {
+    hausmeister: {
+        name: '[HAUSMEISTER]'
+    }
+}
 exports.SERVER_RULES = `#1 Be Respectful
 Please respect other members, whether that be their religion, identity, sexuality, or beliefs. We however, do not tolerate bigotry or hateful beliefs. We do not tolerate slurs, either.
 
