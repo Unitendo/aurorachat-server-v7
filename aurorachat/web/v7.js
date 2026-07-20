@@ -68,7 +68,7 @@ window.addEventListener('load', e => {
     }
 
     function onMessage(author, msg) {
-        messagesdiv.innerText += `<${author}> ${msg.replaceAll('\n', '    \n')}\n`
+        messagesdiv.innerText += `<${author}> ${msg.replaceAll('\n', '\n    ')}\n`
     }
 
     function clearMessages() {

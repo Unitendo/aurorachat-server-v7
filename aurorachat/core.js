@@ -94,7 +94,7 @@ CoreClient.prototype.send = function(msg) {
 
     for(const p of this.server.plugins) {
         if(!mobj) return
-        mobj = p(mobj)
+        mobj = p(mobj, this)
     }
 
     if(!mobj) return
@@ -104,6 +104,7 @@ CoreClient.prototype.send = function(msg) {
 /**
  * @callback PluginMessageCallback
  * @param {Message} msg
+ * @param {CoreClient} client
  * @returns {Message}
  */
 
