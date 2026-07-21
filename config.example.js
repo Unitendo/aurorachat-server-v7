@@ -7,7 +7,12 @@ exports.USER_SAVE_INTERVAL = 720
 exports.PLUGINS = ['hausmeister']
 exports.PLUGIN_CONFIG = {
     hausmeister: {
-        name: '[HAUSMEISTER]'
+        name: '[HAUSMEISTER]',
+        prefix: '!haus'
+    },
+    discordbridge: {
+        channelId: '<channelid for discord bridge>',
+        token: '<token for discord bridge>'
     }
 }
 exports.SERVER_RULES = `#1 Be Respectful
