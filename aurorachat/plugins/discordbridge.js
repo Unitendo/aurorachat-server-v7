@@ -10,7 +10,7 @@ function init(core, config) {
     });
 
     client.on(Events.MessageCreate, message => {
-        if (message.author.username === "Auroracross v6") {return}
+        if (message.author.id === config.userId) {return}
         if (message.channel.id !== config.channelId) {return}
         core.send({
             author: message.author.username+" [DISCORD]",
@@ -20,8 +20,8 @@ function init(core, config) {
     })
 
     function onmessage(msg, _) {
-        // msg.content
-        channel.send(`[*${msg.room}*] <**${msg.author}**>: ${msg.content}`);
+        if(msg.room === config.room)
+            channel.send(`[*${msg.room}*] <**${msg.author}**>: ${msg.content}`);
         return msg
     }
 
