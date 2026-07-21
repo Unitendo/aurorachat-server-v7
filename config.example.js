@@ -12,7 +12,8 @@ exports.PLUGIN_CONFIG = {
     },
     discordbridge: {
         channelId: '<channelid for discord bridge>',
-        token: '<token for discord bridge>'
+        token: '<token for discord bridge>',
+        room: 'general' // room to mirror
     }
 }
 exports.SERVER_RULES = `#1 Be Respectful
