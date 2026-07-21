@@ -1,16 +1,71 @@
+@font-face {
+    font-family: opensans;
+    src: url(OpenSans-VariableFont_wdth\,wght.ttf);
+}
+
 html, body {
     margin: 0;
     padding: 0;
 
+    font-family: opensans, Arial, sans-serif;
+    font-size: 24px;
+
     height: 100%;
 }
 
-#welcome {
-    padding: 0.5em;
+button {
+    font-family: opensans, Arial, sans-serif;
+    font-size: 20px;
+
+    border: none;
+    border-radius: 0.5em;
+    padding: 0.5em 1.5em;
+    background: #ddd;
+
+    cursor: pointer;
 }
 
-#loginform {
+button:hover {
+    background: #aaa;
+}
+
+input {
+    font-family: opensans, Arial, sans-serif;
+    font-size: 16px;
+
+    border: 2px solid #ddd;
+    border-radius: 0.5em;
+    padding: 0.5em 1em;
+    margin: 0.25em;
+    background: #fff;
+
+    cursor: pointer;
+}
+
+#welcome {
+    position: absolute;
+    left: 50%;
+    top: 50%;
+
+    transform: translate(-50%, -50%);
+
     padding: 0.5em;
+    text-align: center;
+}
+
+#welcome > button {
+    margin: 0 0.5em;
+}
+
+#loginform, #registerform {
+    position: absolute;
+    left: 50%;
+    top: 50%;
+
+    transform: translate(-50%, -50%);
+
+    padding: 0.5em;
+    text-align: center;
     display: none;
 }
 
@@ -20,12 +75,33 @@ html, body {
     flex-direction: column;
 }
 
-#roominput {
+#titlebar {
+    height: 2.5em;
     display: flex;
+    background-color: #0ac;
+    align-items: center;
 }
 
-#room {
+#titlebar > * {
+    color: white;
+    margin: 0 0.25em;
+    font-weight: bold;
+}
+
+#titlebar > img {
+    height: 90%;
+}
+
+#roominput, #msginput {
+    display: flex;
+    align-items: center;
+}
+
+#msg, #room {
     flex: 1;
+    height: calc(100% - 0.25em);
+    margin: 0;
+    padding: 0 0.5em;
 }
 
 #messages {
@@ -33,10 +109,18 @@ html, body {
     overflow: scroll;
 }
 
-#msginput {
-    display: flex;
+.msg {
+    padding: 0.25em;
 }
 
-#msg {
-    flex: 1;
+.msg-author {
+    white-space: pre;
+    font-weight: bold;
+    font-size: 20px;
+}
+
+.msg-content {
+    white-space: pre;
+    font-size: 20px;
+    padding: 0.25em;
 }

@@ -23,10 +23,20 @@ window.addEventListener('load', e => {
                             joinRoom('general')
 
                             loginform.style.display = 'none'
+                            registerform.style.display = 'none'
                             chatui.style.display = 'flex'
                         } break
                     }
                 break
+
+                case 'hello': {
+                    if(args[0].toLowerCase() !== 'v7') {
+                        alert('This server is not a v7 server!')
+                        mode = 'badprotocol'
+                        socket.close()
+                    }
+                    servernamediv.innerText = args[1]
+                } break
 
                 case 'msg':
                     onMessage(...args)
@@ -36,6 +46,7 @@ window.addEventListener('load', e => {
     })
 
     socket.addEventListener('close', e => {
+        if(mode === 'badprotocol') return
         location.reload()
     })
 
@@ -68,7 +79,21 @@ window.addEventListener('load', e => {
     }
 
     function onMessage(author, msg) {
-        messagesdiv.innerText += `<${author}> ${msg.replaceAll('\n', '\n    ')}\n`
+        const msgdiv = document.createElement('div')
+        const authordiv = document.createElement('div')
+        const contentdiv = document.createElement('div')
+
+        msgdiv.classList.add('msg')
+        authordiv.classList.add('msg-author')
+        contentdiv.classList.add('msg-content')
+
+        authordiv.innerText = author
+        contentdiv.innerText = msg
+
+        msgdiv.append(authordiv, contentdiv)
+        messagesdiv.append(msgdiv)
+
+        messagesdiv.scrollTop = messagesdiv.scrollHeight
     }
 
     function clearMessages() {
@@ -80,6 +105,7 @@ window.addEventListener('load', e => {
      * @type {HTMLFormElement}
      */
     const loginform = document.getElementById('loginform')
+    const registerform = document.getElementById('registerform')
     const chatui = document.getElementById('chatui')
     const messagesdiv = document.getElementById('messages')
     /**
@@ -90,10 +116,16 @@ window.addEventListener('load', e => {
      * @type {HTMLFormElement}
      */
     const roominput = document.getElementById('roominput')
+    const servernamediv = document.getElementById('servername')
 
     document.getElementById('welcome-login').addEventListener('click', e => {
         welcomediv.style.display = 'none'
         loginform.style.display = 'inherit'
+    })
+
+    document.getElementById('welcome-register').addEventListener('click', e => {
+        welcomediv.style.display = 'none'
+        registerform.style.display = 'inherit'
     })
 
     loginform.addEventListener('submit', e => {
@@ -101,6 +133,20 @@ window.addEventListener('load', e => {
         const {login, passwd} = loginform.elements
         tryLogin('login', login.value, passwd.value)
         passwd.value = ''
+    })
+
+    registerform.addEventListener('submit', e => {
+        e.preventDefault()
+        const {login, passwd, passwd2} = registerform.elements
+        if(passwd.value !== passwd2.value) {
+            alert('Passwords must match!')
+            passwd.value = ''
+            passwd2.value = ''
+            return
+        }
+        tryLogin('register', login.value, passwd.value)
+        passwd.value = ''
+        passwd2.value = ''
     })
 
     msginput.addEventListener('submit', e => {
