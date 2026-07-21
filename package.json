@@ -13,6 +13,7 @@
     "bcrypt": "^6.0.0",
     "body-parser": "^2.3.0",
     "cookie-parser": "^1.4.7",
+    "discord.js": "^14.27.0",
     "ejs": "^6.0.1",
     "express": "^5.2.1",
     "ip-address": "^10.2.0",
