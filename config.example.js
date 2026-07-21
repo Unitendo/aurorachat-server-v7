@@ -13,6 +13,7 @@ exports.PLUGIN_CONFIG = {
     discordbridge: {
         channelId: '<channelid for discord bridge>',
         token: '<token for discord bridge>',
+        userId: '<user id for discord bridge>',
         room: 'general' // room to mirror
     }
 }

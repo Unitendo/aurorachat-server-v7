@@ -10,7 +10,7 @@ function init(core, config) {
     });
 
     client.on(Events.MessageCreate, message => {
-        if (message.author.username === "Auroracross v6") {return}
+        if (message.author.id === config.userId) {return}
         if (message.channel.id !== config.channelId) {return}
         core.send({
             author: message.author.username+" [DISCORD]",
