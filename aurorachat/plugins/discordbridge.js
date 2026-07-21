@@ -2,18 +2,25 @@ const {Client, Events, GatewayIntentBits} = require('discord.js');
 
 function init(core, config) {
     const client = new Client({ intents: [GatewayIntentBits.Guilds, GatewayIntentBits.GuildMessages, GatewayIntentBits.MessageContent] });
+    var channel = null;
 
-    client.on(Events.ClientReady, readyClient => {
+    client.on(Events.ClientReady, async readyClient => {
+        channel = await client.channels.fetch(config.channelId);
         log(`Discord Bot Logged in as ${readyClient.user.tag}!`)
     });
 
     client.on(Events.MessageCreate, message => {
-        log(`Message ${message.content} was sent by ${message.author.username}`)
+        if (message.author.username === "Auroracross v6") {return}
+        core.send({
+            author: message.author.username+" [DISCORD]",
+            room: "general",
+            content: message.content
+        })
     })
 
-    function onmessage(msg, client) {
+    async function onmessage(msg, _) {
         // msg.content
-        
+        channel.send(`[*${msg.room}*] <**${msg.author}**>: ${msg.content}`);
         return msg
     }
 
