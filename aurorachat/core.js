@@ -82,6 +82,7 @@ CoreClient.prototype.getRoomHistory = function() {
  * @param {String} msg 
  */
 CoreClient.prototype.send = function(msg) {
+    if(!msg) return // hardcoded message length check
     if(msg.length > 1024) return // hardcoded message length check
         
     if(!this.user) return
