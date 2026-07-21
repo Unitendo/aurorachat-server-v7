@@ -20,7 +20,6 @@ function init(core, config) {
     })
 
     function onmessage(msg, _) {
-        // msg.content
         if(msg.room === config.room)
             channel.send(`[*${msg.room}*] <**${msg.author}**>: ${msg.content}`);
         return msg
