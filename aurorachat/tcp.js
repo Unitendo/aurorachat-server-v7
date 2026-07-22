@@ -21,6 +21,8 @@ const TCPServer = function(core, port, servername) {
 
         const client = core.connect(ip, msg => {
             socket.write(`msg|${v7.encodeV7(msg.author)}|${v7.encodeV7(msg.content)}|\n`)
+        }, () => {
+            socket.destroy()
         })
 
         socket.on('close', err => {

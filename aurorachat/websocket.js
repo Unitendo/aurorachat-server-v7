@@ -25,6 +25,8 @@ const WSServer = function(core, port, servername) {
         
         const client = core.connect(ip, msg => {
             socket.send(`msg|${v7.encodeV7(msg.author)}|${v7.encodeV7(msg.content)}|\n`)
+        }, () => {
+            socket.close()
         })
 
         socket.on('close', code => {

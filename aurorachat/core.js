@@ -11,11 +11,16 @@ const ip = require('ip-address')
  */
 
 /**
+ * @callback KickCallback
+ */
+
+/**
  * @param {CoreServer} server
  * @param {String} ip
  * @param {MessageCallback} onsend 
+ * @param {KickCallback} onkick 
  */
-const CoreClient = function(server, ip, onsend) {
+const CoreClient = function(server, ip, onsend, onkick) {
     this.server = server
     this.user = undefined
     /**
@@ -24,6 +29,7 @@ const CoreClient = function(server, ip, onsend) {
     this.room = undefined
     this.ip = ip
     this.onsend = onsend
+    this.onkick = onkick
 }
 
 CoreClient.prototype.disconnect = function() {
@@ -104,6 +110,11 @@ CoreClient.prototype.send = function(msg) {
     this.server.send(mobj)
 }
 
+CoreClient.prototype.kick = function() {
+    this.disconnect()
+    this.onkick()
+}
+
 /**
  * @callback PluginMessageCallback
  * @param {Message} msg
@@ -136,10 +147,11 @@ const CoreServer = function(maxroomhistory, serverrules) {
 /**
  * @param {String} ip 
  * @param {MessageCallback} onsend 
+ * @param {KickCallback} onkick
  * @returns {CoreClient}
  */
-CoreServer.prototype.connect = function(ip, onsend) {
-    const client = new CoreClient(this, ip, onsend)
+CoreServer.prototype.connect = function(ip, onsend, onkick) {
+    const client = new CoreClient(this, ip, onsend, onkick)
     this.clients.push(client)
     return client
 }
@@ -157,7 +169,7 @@ CoreServer.prototype.send = function(msg) {
     }
 
     for(const c of this.clients) {
-        if(!c.login) continue
+        if(!c.user) continue
         if(!c.room) continue
         if(msg.room) if(c.room !== msg.room) continue
         c.onsend(msg)
@@ -179,6 +191,35 @@ CoreServer.prototype.computeIP = function(rawip) {
  */
 CoreServer.prototype.checkIPBan = function(ip) {
     return users.checkIPBan(ip)
+}
+
+/**
+ * @param {String} login 
+ * @returns {Number}
+ */
+CoreServer.prototype.countSessions = function(login) {
+    let count = 0
+    for(const c of this.clients) {
+        if(!c.user) continue
+        if(c.user.login !== login) continue
+        count++
+    } 
+    return count
+}
+
+/**
+ * @param {String} login 
+ */
+CoreServer.prototype.kickUser = function(login) {
+    const kicklist = []
+    for(const c of this.clients) {
+        if(!c.user) continue
+        if(c.user.login !== login) continue
+        kicklist.push(c)
+    } 
+    for(const c of kicklist) {
+        c.kick()
+    }
 }
 
 /**
