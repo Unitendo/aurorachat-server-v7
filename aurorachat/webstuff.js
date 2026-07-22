@@ -123,9 +123,25 @@ function adminpanel(core, app) {
             return
         }
 
+        const sessioncount = core.countSessions(login)
+
         const file = fs.readFileSync(path.join(__dirname, 'adminpanel', 'user.ejs'), 'utf-8')
-        const rendered = ejs.render(file, { req, user })
+        const rendered = ejs.render(file, { req, user, sessioncount })
         res.send(rendered)
+    })
+
+    app.post('/adminpanel/kick', (req, res) => {
+        if(sessionCheck(req, res)) return
+
+        const {user: login} = req.body
+        if(!login) {
+            res.redirect(`/adminpanel/`)
+            return
+        }
+
+        core.kickUser(login)
+
+        res.redirect(`/adminpanel/user?user=${encodeURIComponent(login)}`)
     })
 
     app.post('/adminpanel/flags', (req, res) => {

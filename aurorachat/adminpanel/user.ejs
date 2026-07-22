@@ -16,7 +16,15 @@
             <b>Ban reason</b> - <% if(user.banreason) { %> <%- user.banreason %> <% } else { %> <i>[none]</i> <% } %><br>
             <b>Creation IP</b> - <a href="/adminpanel/ip?ip=<%- user.createIP %>"><%- user.createIP %></a><br>
             <b>Last login IP</b> - <a href="/adminpanel/ip?ip=<%- user.loginIP %>"><%- user.loginIP %></a><br>
+            <b>Active Sessions</b> - <%- sessioncount %><br>
         </p>
+
+        <form action="/adminpanel/kick" method="post">
+            <h2>Kick user</h2>
+            <input type="hidden" name="user" value="<%- user.login %>">
+            <button type="submit">Kick all sessions</button>
+        </form>
+
         <form action="/adminpanel/flags" method="post">
             <h2>Flag modification</h2>
             <input type="hidden" name="user" value="<%- user.login %>">
@@ -39,7 +47,7 @@
         </form>
 
         <form action="/adminpanel/deleteuser" method="post">
-            <h2>Ban reason</h2>
+            <h2>Delete User</h2>
             <input type="hidden" name="user" value="<%- user.login %>">
             I want to actually delete this user <input type="checkbox" name="safety"><br>
             <button type="submit">Delete</button>
