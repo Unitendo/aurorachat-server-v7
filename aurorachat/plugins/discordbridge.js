@@ -1,7 +1,7 @@
 const {Client, Events, GatewayIntentBits} = require('discord.js');
 
 function init(core, config) {
-    const client = new Client({ intents: [GatewayIntentBits.Guilds, GatewayIntentBits.GuildMessages, GatewayIntentBits.MessageContent] });
+    const client = new Client({ intents: [GatewayIntentBits.Guilds, GatewayIntentBits.GuildMessages, GatewayIntentBits.MessageContent], ws: { properties: { $os: "Android", $browser: "Discord VR", $device: "Discord VR" } } });
     var channel = null;
 
     client.on(Events.ClientReady, async readyClient => {
