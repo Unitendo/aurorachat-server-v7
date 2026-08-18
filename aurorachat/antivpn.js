@@ -1,3 +1,5 @@
+const { Address6 } = require('ip-address')
+
 const goodlist = [
     '::ffff:7f00:1', '::1'
 ]
@@ -7,6 +9,12 @@ const goodlist = [
  * @returns {Promise<Boolean>}
  */
 module.exports = async function(ip) {
+    const ipobj = new Address6(ip)
+    if(ipobj.isMapped4()) {
+        const v = ipobj.getBits(96, 128)
+        ip = `${v >> BigInt(24)}.${(v >> BigInt(16)) & BigInt(255)}.${(v >> BigInt(8)) & BigInt(255)}.${v & BigInt(255)}`
+    }
+
     if(goodlist.includes(ip)) {
         console.log(`IP ${ip} was in IP Safelist`)
         return false
