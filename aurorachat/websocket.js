@@ -1,5 +1,6 @@
 const ws = require('ws')
 const v7 = require('./v7')
+const antivpn = require('./antivpn')
 
 /**
  * @param {import('./core')} core 
@@ -28,6 +29,13 @@ const WSServer = function(core, port, servername) {
         }, () => {
             socket.close()
         })
+
+        antivpn(ip).then( isbad => {
+            if(!isbad) return
+            client.disconnect()
+            socket.close()
+            core.banIP(ip)
+        } )
 
         socket.on('close', code => {
             client.disconnect()

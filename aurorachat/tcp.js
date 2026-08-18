@@ -1,5 +1,6 @@
 const net = require('net')
 const v7 = require('./v7')
+const antivpn = require('./antivpn')
 
 /**
  * @param {import('./core')} core 
@@ -24,6 +25,13 @@ const TCPServer = function(core, port, servername) {
         }, () => {
             socket.destroy()
         })
+
+        antivpn(ip).then( isbad => {
+            if(!isbad) return
+            client.disconnect()
+            socket.destroy()
+            core.banIP(ip)
+        } )
 
         socket.on('close', err => {
             client.disconnect()

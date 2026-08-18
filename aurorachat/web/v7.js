@@ -38,6 +38,10 @@ window.addEventListener('load', e => {
                     servernamediv.innerText = args[1]
                 } break
 
+                case 'ipbanned': {
+                    mode = 'ipbanned'
+                } break
+
                 case 'msg':
                     onMessage(...args)
                 break
@@ -47,6 +51,10 @@ window.addEventListener('load', e => {
 
     socket.addEventListener('close', e => {
         if(mode === 'badprotocol') return
+        if(mode === 'ipbanned') {
+            welcomediv.innerHTML = `<h1>You're IP-Banned.</h1>`
+            return
+        }
         location.reload()
     })
 
