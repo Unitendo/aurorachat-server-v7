@@ -17,6 +17,7 @@ arg: Optional arguments, each argument is terminated with a | (including the las
 - login|login|passwd| - Logs user in
 - register|login|passwd| - Creates a user
 - rules| - Gets server rules
+- faq| - Gets server FAQ
 - join|room| - Joins a room (Leaves any previous room)
 - part| - Leaves current room
 - history|optionalsize| - Gets message history for current room. Optionally a size parameter can be given, sending the last n bytes.
@@ -29,6 +30,7 @@ arg: Optional arguments, each argument is terminated with a | (including the las
 - ok| - Command succeeded
 - err|errcode| - Command failed, error code specified
 - rules|rules| - Server rules
+- faq|faq| - Server faq
 - msg|user|msg| - Message from user
 
 ## Error codes ##
