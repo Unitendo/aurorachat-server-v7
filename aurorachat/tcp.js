@@ -9,7 +9,7 @@ const antivpn = require('./antivpn')
  */
 const TCPServer = function(core, port, servername) {
     const server = net.createServer(socket => {
-        const rawip = socket.address().address
+        const rawip = socket.remoteAddress
         const ip = core.computeIP(rawip)
         if(core.checkIPBan(ip)) {
             socket.write(`ipbanned|\n`)
