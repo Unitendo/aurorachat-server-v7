@@ -25,7 +25,6 @@ module.exports = async function(ip) {
     const { detection } = data
     const { is_proxy, is_vpn, is_tor, is_hosting } = detection
 
-    console.log(detection)
     const isbad = is_proxy || is_vpn || is_tor || is_hosting
 
     if(!isbad)
