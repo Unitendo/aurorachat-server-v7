@@ -1,7 +1,7 @@
 const { Address6 } = require('ip-address')
 
 const goodlist = [
-    '::ffff:7f00:1', '::1'
+    '127.0.0.1', '::1'
 ]
 
 /**
