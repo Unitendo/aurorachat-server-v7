@@ -34,9 +34,9 @@ function parseV7Command(client, command, args) {
             return ['ok']
         }
 
-        case 'faq': {
-            return ['faq', 'TODO: Implement a proper FAQ thing']
-        } break
+        case 'motd': {
+            return ['motd', client.getServerMOTD()]
+        }
 
         case 'rules': {
             return ['rules', client.getServerRules()]

@@ -75,10 +75,17 @@ CoreClient.prototype.register = function(login, passwd, force = false) {
 }
 
 /**
- * @return {String} 
+ * @returns {String} 
  */
 CoreClient.prototype.getServerRules = function() {
     return this.server.serverrules
+}
+
+/**
+ * @returns {String} 
+ */
+CoreClient.prototype.getServerMOTD = function() {
+    return this.server.motd
 }
 
 /**
@@ -156,6 +163,7 @@ const CoreServer = function(maxroomhistory, serverrules, spaminterval, spamcount
      */
     this.clients = []
     this.serverrules = serverrules
+    this.motd = 'This server hasn\'t set a MOTD yet! Please nag the server admins about this!'
     /**
      * @type { Object.<string, Message[]> }
      */

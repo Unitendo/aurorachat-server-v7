@@ -11,7 +11,7 @@
         <p>
             IP Banned IPs:<br>
             <% for(const i of ips) { %>
-                <a href="/adminpanel/ip?ip=<%- i %>" target="_blank"><%- i %></a><br>
+                <a href="/adminpanel/ip?ip=<%= i %>" target="_blank"><%= i %></a><br>
             <% } %>
         </p>
     </body>
