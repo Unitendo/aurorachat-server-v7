@@ -35,6 +35,13 @@
             <button type="submit">Sign up</button>
         </form>
 
+        <div id="rulespage">
+            <h3>Server Rules</h3>
+            <div id="rules"></div>
+            <br>
+            <button id="rulesclose">I have read and agree to the rules above</button>
+        </div>
+
         <label id="chatui" for="msg">
             <div id="titlebar">
                 <img src="logo.png">
@@ -43,6 +50,7 @@
             <form id="roominput">
                 #
                 <input type="text" autocapitalize="off" autocomplete="off" autocorrect="off" name="room" id="room" value="general">
+                <button type="button" id="motdbtn">View MOTD</button>
                 <button type="submit">Join</button>
             </form>
             <div id="messages"></div>

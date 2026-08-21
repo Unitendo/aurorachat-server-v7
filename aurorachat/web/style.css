@@ -57,7 +57,7 @@ input {
     margin: 0 0.5em;
 }
 
-#loginform, #registerform {
+#rulespage, #loginform, #registerform {
     position: absolute;
     left: 50%;
     top: 50%;
@@ -67,6 +67,23 @@ input {
     padding: 0.5em;
     text-align: center;
     display: none;
+}
+
+#rulespage {
+    background: #eee;
+    padding: 1em;
+    border: #333 solid 2px;
+    box-shadow: 2em 2em 4em #444;
+    transform: translate(-50%, -75%);
+}
+
+#rules {
+    flex: 1;
+    overflow: scroll;
+    max-width: 20em;
+    max-height: 10em;
+    margin: 0 auto;
+    text-align: left;
 }
 
 #chatui {
