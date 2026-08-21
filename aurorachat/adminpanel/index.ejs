@@ -46,11 +46,19 @@
         </fieldset>
 
         <fieldset>
+            <legend><b>MOTD</b></legend>
+            <form action="/adminpanel/motd" method="post">
+                <textarea name="motd"><%= motd %></textarea><br>
+                <button type="submit">Set</button>
+            </form>
+        </fieldset>
+
+        <fieldset>
             <legend><b>BCrypt Password</b></legend>
             <form action="/adminpanel/bcrypt" method="post">
                 Password: <input type="text" name="passwd"><br>
                 <% if(req.query.hash) { %>
-                <pre><%- req.query.hash %> </pre>
+                <pre><%= req.query.hash %> </pre>
                 <% } %>
                 <button type="submit">Hash</button>
             </form>

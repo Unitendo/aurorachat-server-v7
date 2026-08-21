@@ -84,7 +84,7 @@ function adminpanel(core, app) {
     app.get('/adminpanel/', (req, res) => {
         if(sessionCheck(req, res)) return
         const file = fs.readFileSync(path.join(__dirname, 'adminpanel', 'index.ejs'), 'utf-8')
-        const rendered = ejs.render(file, { req })
+        const rendered = ejs.render(file, { req, motd: core.motd })
         res.send(rendered)
     })
 
@@ -252,6 +252,17 @@ function adminpanel(core, app) {
         const file = fs.readFileSync(path.join(__dirname, 'adminpanel', 'ipbans.ejs'), 'utf-8')
         const rendered = ejs.render(file, { req, ips })
         res.send(rendered)
+    })
+
+    app.post('/adminpanel/motd', (req, res) => {
+        if(sessionCheck(req, res)) return
+
+        res.redirect('/adminpanel/')
+        const {motd} = req.body
+        if(!motd) 
+            return
+
+        core.motd = motd.replace('\r', '')
     })
 
     app.post('/adminpanel/bcrypt', (req, res) => {
