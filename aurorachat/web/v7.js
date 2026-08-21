@@ -45,6 +45,17 @@ window.addEventListener('load', e => {
                 case 'msg':
                     onMessage(...args)
                 break
+
+                case 'rules': { 
+                    const [ rules ] = args
+                    rulespage.style.display = 'inherit'
+                    rulesdiv.innerText = rules
+                } break
+
+                case 'motd': {
+                    const [ motd ] = args
+                    alert(`Message of the day:\n\n${motd}`)
+                } break
             }
         }
     })
@@ -86,6 +97,10 @@ window.addEventListener('load', e => {
         document.getElementById('room').value = room
     }
 
+    function getMOTD() {
+        sendV7(['motd'])
+    }
+
     function onMessage(author, msg) {
         const msgdiv = document.createElement('div')
         const authordiv = document.createElement('div')
@@ -109,6 +124,8 @@ window.addEventListener('load', e => {
     }
 
     const welcomediv = document.getElementById('welcome')
+    const rulespage = document.getElementById('rulespage')
+    const rulesdiv = document.getElementById('rules')
     /**
      * @type {HTMLFormElement}
      */
@@ -125,15 +142,22 @@ window.addEventListener('load', e => {
      */
     const roominput = document.getElementById('roominput')
     const servernamediv = document.getElementById('servername')
+    const motdbtn = document.getElementById('motdbtn')
 
     document.getElementById('welcome-login').addEventListener('click', e => {
         welcomediv.style.display = 'none'
         loginform.style.display = 'inherit'
+        sendV7(['rules'])
     })
 
     document.getElementById('welcome-register').addEventListener('click', e => {
         welcomediv.style.display = 'none'
         registerform.style.display = 'inherit'
+        sendV7(['rules'])
+    })
+
+    document.getElementById('rulesclose').addEventListener('click', e => {
+        rulespage.style.display = 'none'
     })
 
     loginform.addEventListener('submit', e => {
@@ -168,5 +192,9 @@ window.addEventListener('load', e => {
         e.preventDefault()
         const {room} = roominput.elements
         joinRoom(room.value)
+    })
+
+    motdbtn.addEventListener('click', () => {
+        getMOTD()
     })
 })
