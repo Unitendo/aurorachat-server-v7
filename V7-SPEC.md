@@ -47,7 +47,7 @@ arg: Optional arguments, each argument is terminated with a | (including the las
 
 Direct messages can be achieved by setting the channel name to `@username`
 where `username` is the login of the other person.
-If both people set the channels to eachother's usernames, messages can be send privately between them.
+If both people set the channels to eachother's usernames, messages can be sent privately between them.
 Plugins cannot be used in DMs.
 
 ## Example communication ##
