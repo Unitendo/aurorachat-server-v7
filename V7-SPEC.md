@@ -43,6 +43,13 @@ arg: Optional arguments, each argument is terminated with a | (including the las
 - bad_login - User login failed (a bad username or password)
 - banned|ban_reason - User was banned, a reason is also specified
 
+## Direct Messages ##
+
+Direct messages can be achieved by setting the channel name to `@username`
+where `username` is the login of the other person.
+If both people set the channels to eachother's usernames, messages can be send privately between them.
+Plugins cannot be used in DMs.
+
 ## Example communication ##
 
 Messages from the server are marked with `>`
