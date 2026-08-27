@@ -75,6 +75,14 @@ CoreClient.prototype.register = function(login, passwd, force = false) {
 }
 
 /**
+ * @param {String} room 
+ */
+CoreClient.prototype.joinRoom = function(room) {
+    while(room.startsWith('#')) room = room.slice(1)
+    this.room = room
+}
+
+/**
  * @returns {String} 
  */
 CoreClient.prototype.getServerRules = function() {
