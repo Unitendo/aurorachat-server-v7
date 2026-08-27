@@ -199,6 +199,20 @@ CoreServer.prototype.send = function(msg) {
     console.log(msg)
 
     if(msg.room) {
+        if(msg.room.startsWith('@')) {
+            const dmuser = msg.room.slice(1)
+            for(const c of this.clients) {
+                if(!c.user) continue
+                if(c.user.login === msg.author && c.room === msg.room) c.onsend(msg)
+                if(c.user.login !== dmuser) continue
+                if(!c.room) continue
+                if(!c.room.startsWith('@')) continue
+                if(c.room.slice(1) !== msg.author) continue
+                c.onsend(msg)
+            }
+            return
+        }
+
         if(!(msg.room in this.history)) this.history[msg.room] = []
         this.history[msg.room].push(msg)
         this.history[msg.room] = this.history[msg.room].slice(-this.maxroomhistory)
@@ -276,6 +290,7 @@ CoreServer.prototype.loadPlugins = function(pluginlist, pluginconfig) {
  * @returns {Message | undefined}
  */
 CoreServer.prototype.pluginPassthrough = function(msg, client) {
+    if(msg.room.startsWith('@')) return msg
     for(const p of this.plugins) {
         if(!msg) return
         msg = p(msg, client)
