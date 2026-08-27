@@ -35,6 +35,7 @@ function init(core, config) {
      * @returns {import('../core').Message}
      */
     function onmessage(msg, client) {
+        if(msg.author === config.name) return msg
         if(msg.content === config.prefix) {
             client.onsend({
                 author: config.name,
@@ -60,7 +61,7 @@ viewposts - View posts on the room's bulletin board
                 break
 
                 case 'implode':
-                    core.send({
+                    core.pluginSend({
                         author: config.name,
                         room: msg.room,
                         content: `${msg.author} has imploded!`
