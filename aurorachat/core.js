@@ -284,6 +284,18 @@ CoreServer.prototype.pluginPassthrough = function(msg, client) {
 }
 
 /**
+ * @param {Message} msg
+ * @param {MessageCallback} pluginreplycb
+ */
+CoreServer.prototype.pluginSend = function(msg, pluginreplycb = function(msg){}) {
+    const fakeclient = new CoreClient(this, '::1', pluginreplycb, () => {})
+    for(const p of this.plugins) {
+        p(msg, fakeclient)
+    }
+    this.send(msg)
+}
+
+/**
  * @param {String} login 
  * @returns {users | undefined}
  */

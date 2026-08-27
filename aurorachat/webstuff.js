@@ -95,7 +95,8 @@ function adminpanel(core, app) {
     })
 
     app.post('/adminpanel/login', (req, res) => {
-        const {login, passwd} = req.body
+        const login = String(req.body.login)
+        const passwd = String(req.body.passwd)
         if(!login || !passwd) {
             res.redirect('/adminpanel/login?err=1')
             return
@@ -116,8 +117,9 @@ function adminpanel(core, app) {
     app.get('/adminpanel/user', (req, res) => {
         if(sessionCheck(req, res)) return
 
-        const {user: login} = req.query
+        const login = String(req.query.user)
         const user = core.getUserByLogin(login)
+
         if(!user) {
             res.redirect('/adminpanel/?lookup_err=1')
             return
@@ -133,7 +135,7 @@ function adminpanel(core, app) {
     app.post('/adminpanel/kick', (req, res) => {
         if(sessionCheck(req, res)) return
 
-        const {user: login} = req.body
+        const login = String(req.body.user)
         if(!login) {
             res.redirect(`/adminpanel/`)
             return
@@ -147,7 +149,10 @@ function adminpanel(core, app) {
     app.post('/adminpanel/flags', (req, res) => {
         if(sessionCheck(req, res)) return
 
-        const {user: login, flag, mode} = req.body
+        const login = String(req.body.user)
+        const flag = String(req.body.flag)
+        const mode = String(req.body.mode)
+
         res.redirect(`/adminpanel/user?user=${encodeURIComponent(login)}`)
         if(!flag || !mode) return
 
@@ -167,7 +172,9 @@ function adminpanel(core, app) {
     app.post('/adminpanel/banreason', (req, res) => {
         if(sessionCheck(req, res)) return
 
-        const {user: login, banreason} = req.body
+        const login = String(req.body.user)
+        const banreason = String(req.body.banreason)
+
         res.redirect(`/adminpanel/user?user=${encodeURIComponent(login)}`)
 
         const user = core.getUserByLogin(login)
@@ -179,7 +186,9 @@ function adminpanel(core, app) {
     app.post('/adminpanel/deleteuser', (req, res) => {
         if(sessionCheck(req, res)) return
 
-        const {user: login, safety} = req.body
+        const login = String(req.body.user)
+        const safety = req.body.safety
+
         const user = core.getUserByLogin(login)
         if(!user) {
             res.redirect(`/adminpanel/user?user=${encodeURIComponent(login)}`)
@@ -199,7 +208,9 @@ function adminpanel(core, app) {
     app.post('/adminpanel/ipban', (req, res) => {
         if(sessionCheck(req, res)) return
 
-        const {ip, mode} = req.body
+        const ip = String(req.body.ip)
+        const mode = String(req.body.mode)
+
         res.redirect(`/adminpanel/`)
         if(!ip || !mode) return
         const cip = core.computeIP(ip)
@@ -217,8 +228,9 @@ function adminpanel(core, app) {
     app.post('/adminpanel/createuser', (req, res) => {
         if(sessionCheck(req, res)) return
 
-        const {login, passwd} = req.body
-        
+        const login = String(req.body.login)
+        const passwd = String(req.body.passwd)
+
         res.redirect(`/adminpanel/user?user=${encodeURIComponent(login)}`)
 
         if(core.getUserByLogin(login)) return
@@ -231,7 +243,7 @@ function adminpanel(core, app) {
     app.get('/adminpanel/ip', (req, res) => {
         if(sessionCheck(req, res)) return
 
-        const {ip} = req.query
+        const ip = String(req.query.ip)
         if(!ip) {
             res.redirect('/adminpanel/')
             return
@@ -258,7 +270,8 @@ function adminpanel(core, app) {
         if(sessionCheck(req, res)) return
 
         res.redirect('/adminpanel/')
-        const {motd} = req.body
+
+        const motd = String(req.body.motd)
         if(!motd) 
             return
 
@@ -268,7 +281,7 @@ function adminpanel(core, app) {
     app.post('/adminpanel/bcrypt', (req, res) => {
         if(sessionCheck(req, res)) return
 
-        const {passwd} = req.body
+        const passwd = String(req.body.passwd)
         if(!passwd) {
             res.redirect('/adminpanel/')
             return
@@ -294,7 +307,7 @@ const WebServer = function(core, port) {
         res.redirect('/web/')
     })
 
-    app.listen(port, () => console.log('Web server on port', port))
+    app.listen(port, () => console.log('Web server on port', port, `http://localhost:${port}/`))
 }
 
 module.exports = WebServer
