@@ -23,8 +23,9 @@ function init(core, config) {
     client.on(Events.MessageCreate, message => {
         if(message.author.id === config.userId) return
         if(message.channel.id !== config.channelId) return
+
         core.pluginSend({
-            author: `${message.author.username} [DISCORD]`,
+            author: `${message.member.displayName} [DISCORD]`,
             room: config.room,
             content: message.content
         }, msg => {
