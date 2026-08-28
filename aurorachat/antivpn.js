@@ -23,10 +23,10 @@ module.exports = async function(ip) {
 
     const res = await fetch(`https://geoiphub.com/api/lookup/${ip}`)
     const data = await res.json()
-    const { detection } = data
+    const { asn, detection } = data
     const { is_proxy, is_vpn, is_tor, is_hosting } = detection
 
-    const isbad = is_proxy || is_vpn || is_tor || is_hosting
+    const isbad = is_proxy || is_vpn || is_tor || is_hosting || (asn["org"] == "CLOUDFLARENET - Cloudflare, Inc.")
 
     if(!isbad)
         goodlist.push(ip)
