@@ -1,3 +1,4 @@
+require('dns').setDefaultResultOrder('ipv4first');
 const { Address6 } = require('ip-address')
 
 const goodlist = [
