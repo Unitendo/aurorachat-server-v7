@@ -1,6 +1,10 @@
 window.addEventListener('load', e => {
     let mode = 'login'
 
+    const urlregex = /(https?:\/\/[^\s]+)/g
+    // ^ This probably sucks, but it should work well enough
+    const embed_endpoint = '/embeds'
+
     const socket = new WebSocket(`ws://${location.hostname}:7071/`)
     socket.addEventListener('message', e => {
         const msgs = e.data.trim().split('\n')
@@ -102,9 +106,6 @@ window.addEventListener('load', e => {
     }
 
     function urlify(text) {
-        const urlregex = /(https?:\/\/[^\s]+)/g
-        // ^ This probably sucks, but it should work well enough
-
         return text.replace(urlregex, '<a href="$1" target="_blank">$1</a>')
     }
 

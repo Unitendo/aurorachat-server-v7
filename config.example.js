@@ -3,6 +3,7 @@ exports.WS_PORT = 7071
 exports.WEB_PORT = 7080
 exports.SERVER_NAME = 'Unnamed Aurorachat V7 Server'
 exports.MAX_ROOM_HISTORY = 128
+exports.MAX_EMBED_BACKLOG = 64
 exports.USER_SAVE_INTERVAL = 720
 exports.REGISTER_DISABLED = false
 exports.SPAM_INTERVAL = 5000

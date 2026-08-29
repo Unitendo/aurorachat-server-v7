@@ -7,6 +7,9 @@ const ejs = require('ejs')
 const bcrypt = require('bcrypt')
 const fs = require('fs')
 const path = require('path')
+const uuid = require('uuid')
+const { encodeV7 } = require('./v7')
+const antivpn = require('./antivpn')
 
 const HASH_ROUNDS = 12
 const ADMINFILE = path.join(__dirname, 'data', 'admins.json')
@@ -294,13 +297,109 @@ function adminpanel(core, app) {
 
 /**
  * @param {import('./core')} core 
- * @param {Number} port 
+ * @param {express.Express} app 
+ * @param {Number} maxembedbacklog 
  */
-const WebServer = function(core, port) {
+function embedserver(core, app, maxembedbacklog) {
+    /**
+     * @param {Buffer} buffer 
+     * @param {String} type 
+     * @param {String} author 
+     */
+    function Embed(buffer, type, author) {
+        this.buffer = buffer
+        this.type = type
+        this.author = author
+    }
+
+    /**
+     * @type { Object.<string, Embed> }
+     */
+    let embedlist = {}
+    
+    function getUniqueEID() {
+        let eid = uuid.v4()
+        while(eid in embedlist)
+            eid = uuid.v4()
+        return eid
+    }
+
+    app.use('/embeds/', (req, res, next) => {
+        const rawip = req.socket.remoteAddress
+        const ip = core.computeIP(rawip)
+        if(core.checkIPBan(ip)) {
+            res.status(403).end()
+            console.warn(`Attempted IP-Ban Embed connection from ${ip} (${rawip})`)
+            return
+        }
+
+        antivpn(ip).then( isbad => {
+            if(!isbad) return
+            core.banIP(ip)
+        } )
+        
+        next()
+    })
+
+    app.use('/embeds', bodyParser.raw({
+        type: ['image/png', 'image/gif'],
+        limit: '1MB'
+    }))
+
+    app.post('/embeds', (req, res) => {
+        if(!req.body) return res.status(400).end()
+        const authhdr = req.headers.authorization
+        if(!authhdr) return res.status(401).setHeader('WWW-Authenticate', 'V7')
+        const [ authtype, ...authstr ] = authhdr.split(' ')
+        if(authtype !== 'V7') return res.status(401).setHeader('WWW-Authenticate', 'V7')
+        const [login, passwd] = authstr.join(' ').split('|').map(v => decodeURIComponent(v))
+        const user = core.getUserByLogin(login)
+        if(!user) return res.status(401).setHeader('WWW-Authenticate', 'V7')
+        if(!user.comparePasswd(passwd)) return res.status(401).setHeader('WWW-Authenticate', 'V7')
+        if(user.checkFlag('BANNED')) return res.status(403).end()
+        if(user.checkFlag('MUTED')) return res.status(403).end()
+
+        const eid = getUniqueEID()
+        embedlist[eid] = new Embed(req.body, req.headers['content-type'], login)
+
+        console.log(`Embed ${eid} added by ${login} (${req.socket.remoteAddress})`)
+
+        res.send(eid)
+
+        const entries = Object.entries(embedlist)
+        if(entries.length > maxembedbacklog) {
+            const last = entries.slice(-maxembedbacklog)
+            embedlist = {}
+            for(const e of last) {
+                embedlist[e[0]] = e[1]
+            }
+        }
+    })
+
+    app.get('/embeds/:embed', (req, res) => {
+        const embed = embedlist[req.params.embed]
+        if(!embed) return res.status(404).end()
+        res.type(embed.type).send(embed.buffer)
+    })
+
+    app.get('/embeds/:embed/info', (req, res) => {
+        const embed = embedlist[req.params.embed]
+        if(!embed) return res.status(404).end()
+        res.contentType('text').send(`${encodeV7(req.params.embed)}|${encodeV7(embed.author)}|${encodeV7(embed.type)}|`)
+    })
+}
+
+/**
+ * @param {import('./core')} core 
+ * @param {Number} port 
+ * @param {Number} maxembedbacklog 
+ */
+const WebServer = function(core, port, maxembedbacklog) {
     const app = express()
 
     app.use(cookieParser())
     adminpanel(core, app)
+    embedserver(core, app, maxembedbacklog)
 
     app.use('/web/', express.static(path.join(__dirname, 'web')))
     app.get('/', (req, res) => {

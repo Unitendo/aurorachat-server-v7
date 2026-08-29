@@ -21,7 +21,7 @@ const core = new Core(
 )
 tcpserver(core, config.TCP_PORT)
 wsserver(core, config.WS_PORT)
-webstuff(core, config.WEB_PORT)
+webstuff(core, config.WEB_PORT, config.MAX_EMBED_BACKLOG)
 core.loadPlugins(config.PLUGINS, config.PLUGIN_CONFIG)
 
 Core.userSaveInterval(config.USER_SAVE_INTERVAL)
