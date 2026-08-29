@@ -141,3 +141,12 @@ input {
     font-size: 20px;
     padding: 0.25em;
 }
+
+a:link, a:visited {
+    color: #55f;
+}
+
+a:hover {
+    color: #f55;
+    text-shadow: #aaa 4px 4px 0.25em;
+}

@@ -101,6 +101,13 @@ window.addEventListener('load', e => {
         sendV7(['motd'])
     }
 
+    function urlify(text) {
+        const urlregex = /(https?:\/\/[^\s]+)/g
+        // ^ This probably sucks, but it should work well enough
+
+        return text.replace(urlregex, '<a href="$1" target="_blank">$1</a>')
+    }
+
     function onMessage(author, msg) {
         const msgdiv = document.createElement('div')
         const authordiv = document.createElement('div')
@@ -112,6 +119,7 @@ window.addEventListener('load', e => {
 
         authordiv.innerText = author
         contentdiv.innerText = msg
+        contentdiv.innerHTML = urlify(contentdiv.innerHTML)
 
         msgdiv.append(authordiv, contentdiv)
         messagesdiv.append(msgdiv)
