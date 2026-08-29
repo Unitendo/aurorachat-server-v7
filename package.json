@@ -20,5 +20,8 @@
     "jsonwebtoken": "^9.0.3",
     "uuid": "^14.0.1",
     "ws": "^8.21.1"
+  },
+  "allowScripts": {
+    "bcrypt@6.0.0": true
   }
 }

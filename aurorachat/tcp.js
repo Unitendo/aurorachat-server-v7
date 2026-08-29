@@ -4,10 +4,9 @@ const antivpn = require('./antivpn')
 
 /**
  * @param {import('./core')} core 
- * @param {Number} port 
- * @param {string} servername
+ * @param {Number} port
  */
-const TCPServer = function(core, port, servername) {
+const TCPServer = function(core, port) {
     const server = net.createServer(socket => {
         const rawip = socket.remoteAddress
         const ip = core.computeIP(rawip)
@@ -72,7 +71,7 @@ const TCPServer = function(core, port, servername) {
             socket.destroy()
         })
 
-        socket.write(`hello|v7|${v7.encodeV7(servername)}|\n`)
+        socket.write(`hello|v7|${v7.encodeV7(core.servername)}|\n`)
     } )
     server.listen(port, () => console.log('TCP server on port', port))
 }

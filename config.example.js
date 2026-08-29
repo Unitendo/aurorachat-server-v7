@@ -25,6 +25,11 @@ exports.PLUGIN_CONFIG = {
         name: '[JACKBOT]'
     }
 }
+exports.DEFAULT_MOTD = `Welcome to <%- servername %>, <%- username %>!
+
+The admins of this server haven't bothered to change default MOTD!
+Please nag them about this!
+`
 exports.SERVER_RULES = `#1 Be Respectful
 Please respect other members, whether that be their religion, identity, sexuality, or beliefs. We however, do not tolerate bigotry or hateful beliefs. We do not tolerate slurs, either.
 
