@@ -150,3 +150,7 @@ a:hover {
     color: #f55;
     text-shadow: #aaa 4px 4px 0.25em;
 }
+
+.embedimg {
+    height: 256px;
+}

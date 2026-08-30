@@ -128,6 +128,18 @@ window.addEventListener('load', e => {
         contentdiv.innerHTML = urlify(contentdiv.innerHTML)
 
         msgdiv.append(authordiv, contentdiv)
+
+        try {
+            const embedurl = new URL(msg)
+            if(embedurl.host !== window.location.host) return
+            if(!embedurl.pathname.startsWith(embed_endpoint)) return
+            
+            const img = new Image()
+            img.src = embedurl.href
+            img.className = 'embedimg'
+            msgdiv.append(img)
+        } catch(e) {} // not a link or embed
+
         messagesdiv.append(msgdiv)
 
         messagesdiv.scrollTop = messagesdiv.scrollHeight
@@ -236,7 +248,7 @@ window.addEventListener('load', e => {
                     return alert(`Upload request gave status code ${res.status}`)
                 const eid = await res.text()
                 const embedlink = new URL(`${embed_endpoint}/${eid}`, window.location)
-                sendMsg(embedlink.toString())
+                sendMsg(embedlink.href)
             } catch(e) {
                 alert(e)
             }
