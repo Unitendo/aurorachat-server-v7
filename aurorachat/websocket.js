@@ -4,10 +4,9 @@ const antivpn = require('./antivpn')
 
 /**
  * @param {import('./core')} core 
- * @param {Number} port 
- * @param {string} servername
+ * @param {Number} port
  */
-const WSServer = function(core, port, servername) {
+const WSServer = function(core, port) {
     const server = new ws.WebSocketServer({
         port
     }, () => console.log('WS server on port', port))
@@ -70,7 +69,7 @@ const WSServer = function(core, port, servername) {
             }
         })
 
-        socket.send(`hello|v7|${v7.encodeV7(servername)}|\n`)
+        socket.send(`hello|v7|${v7.encodeV7(core.servername)}|\n`)
     })
 }
 

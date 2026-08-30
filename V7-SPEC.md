@@ -1,4 +1,4 @@
-# Aurorachat V7 #
+# AuroraChat V7 #
 
 ## Message structure ##
 

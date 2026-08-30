@@ -1,5 +1,6 @@
 const users = require('./users')
 const ip = require('ip-address')
+const ejs = require('ejs')
 
 /**
  * @typedef { { author: string, room: string, content: string } } Message
@@ -93,7 +94,12 @@ CoreClient.prototype.getServerRules = function() {
  * @returns {String} 
  */
 CoreClient.prototype.getServerMOTD = function() {
-    return this.server.motd
+    const motd = ejs.render(this.server.motd, { 
+        servername: this.server.servername,
+        username: this.user ? this.user.login : 'John Doe',
+        room: this.room
+    })
+    return motd
 }
 
 /**
@@ -158,20 +164,23 @@ CoreClient.prototype.kick = function() {
  */
 
 /**
+ * @param {String} servername 
  * @param {Number} maxroomhistory
  * @param {String} serverrules 
  * @param {Number} spaminterval
  * @param {Number} spamcount
  * @param {Number} spamcountkick
  * @param {Number} registerdisabled
+ * @param {String | undefined} defaultmotd
  */
-const CoreServer = function(maxroomhistory, serverrules, spaminterval, spamcount, spamcountkick, registerdisabled) {
+const CoreServer = function(servername, maxroomhistory, serverrules, spaminterval, spamcount, spamcountkick, registerdisabled, defaultmotd) {
+    this.servername = servername
     /**
      * @type {CoreClient[]}
      */
     this.clients = []
     this.serverrules = serverrules
-    this.motd = 'This server hasn\'t set a MOTD yet! Please nag the server admins about this!'
+    this.motd = defaultmotd || 'This server hasn\'t set a MOTD yet! Please nag the server admins about this!'
     /**
      * @type { Object.<string, Message[]> }
      */
