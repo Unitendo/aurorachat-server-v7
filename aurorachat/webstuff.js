@@ -349,13 +349,13 @@ function embedserver(core, app, maxembedbacklog) {
     app.post('/embeds', (req, res) => {
         if(!req.body) return res.status(400).end()
         const authhdr = req.headers.authorization
-        if(!authhdr) return res.status(401).setHeader('WWW-Authenticate', 'V7')
+        if(!authhdr) return res.status(401).setHeader('WWW-Authenticate', 'V7').end()
         const [ authtype, ...authstr ] = authhdr.split(' ')
-        if(authtype !== 'V7') return res.status(401).setHeader('WWW-Authenticate', 'V7')
+        if(authtype !== 'V7') return res.status(401).setHeader('WWW-Authenticate', 'V7').end()
         const [login, passwd] = authstr.join(' ').split('|').map(v => decodeURIComponent(v))
         const user = core.getUserByLogin(login)
-        if(!user) return res.status(401).setHeader('WWW-Authenticate', 'V7')
-        if(!user.comparePasswd(passwd)) return res.status(401).setHeader('WWW-Authenticate', 'V7')
+        if(!user) return res.status(401).setHeader('WWW-Authenticate', 'V7').end()
+        if(!user.comparePasswd(passwd)) return res.status(401).setHeader('WWW-Authenticate', 'V7').end()
         if(user.checkFlag('BANNED')) return res.status(403).end()
         if(user.checkFlag('MUTED')) return res.status(403).end()
 

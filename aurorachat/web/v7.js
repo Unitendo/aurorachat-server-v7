@@ -1,5 +1,8 @@
 window.addEventListener('load', e => {
     let mode = 'login'
+    const credentials = {
+        login: '', passwd: ''
+    }
 
     const urlregex = /(https?:\/\/[^\s]+)/g
     // ^ This probably sucks, but it should work well enough
@@ -88,6 +91,8 @@ window.addEventListener('load', e => {
 
     function tryLogin(cmd, login, passwd) {
         sendV7([cmd, login, passwd])
+        credentials.login = login
+        credentials.passwd = passwd
     }
 
     function sendMsg(msg) {
@@ -152,6 +157,7 @@ window.addEventListener('load', e => {
     const roominput = document.getElementById('roominput')
     const servernamediv = document.getElementById('servername')
     const motdbtn = document.getElementById('motdbtn')
+    const embedbtn = document.getElementById('embedbtn')
 
     document.getElementById('welcome-login').addEventListener('click', e => {
         welcomediv.style.display = 'none'
@@ -205,5 +211,37 @@ window.addEventListener('load', e => {
 
     motdbtn.addEventListener('click', () => {
         getMOTD()
+    })
+
+    embedbtn.addEventListener('click', () => {
+        const fileinput = document.createElement('input')
+        fileinput.type = 'file'
+        fileinput.accept = 'image/png,image/gif'
+
+        fileinput.addEventListener('change', async e => {
+            try {
+                const files = fileinput.files
+                if(!files) return
+                const [file] = files
+                const buffer = await file.arrayBuffer()
+                const res = await fetch(embed_endpoint, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': file.type,
+                        'Authorization': `V7 ${encodeV7(credentials.login)}|${encodeV7(credentials.passwd)}|`
+                    },
+                    body: buffer
+                })
+                if(res.status !== 200)
+                    return alert(`Upload request gave status code ${res.status}`)
+                const eid = await res.text()
+                const embedlink = new URL(`${embed_endpoint}/${eid}`, window.location)
+                sendMsg(embedlink.toString())
+            } catch(e) {
+                alert(e)
+            }
+        })
+
+        fileinput.click()
     })
 })
