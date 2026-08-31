@@ -131,8 +131,8 @@ window.addEventListener('load', e => {
 
         try {
             const embedurl = new URL(msg)
-            if(embedurl.host !== window.location.host) return
-            if(!embedurl.pathname.startsWith(embed_endpoint)) return
+            if(embedurl.host !== window.location.host) throw new Error('CORS')
+            if(!embedurl.pathname.startsWith(embed_endpoint)) throw new Error('CORS')
             
             const img = new Image()
             img.src = embedurl.href
