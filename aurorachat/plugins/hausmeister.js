@@ -107,7 +107,17 @@ viewposts - View posts on the room's bulletin board
                         content: `Unknown command "${command}", use ${config.prefix} help for a command list.`
                     })
             }
+            if(client.user) client.user.addFlag('haus_wasseen')
             return undefined
+        } else if(client.user) {
+            setTimeout(() => {
+                if(client.user.checkFlag('haus_wasseen')) return
+                client.onsend({
+                    author: config.name,
+                    content: `Hey! It seems you're new here!\nI'm Hausmeister, send ${config.prefix} help for my commands.\nAnyways, have fun!`
+                })
+                client.user.addFlag('haus_wasseen')
+            }, 1)
         }
         return msg
     }
