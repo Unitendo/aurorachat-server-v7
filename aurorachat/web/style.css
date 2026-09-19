@@ -4,8 +4,10 @@
 }
 
 canvas {
+    position: absolute;
     height: 100vh;
     width: 100vw;
+    z-index: -1;
 }
 
 html, body {
@@ -93,6 +95,7 @@ input {
 
 #chatui {
     display: none;
+    z-index: 1;
     height: 100%;
     flex-direction: column;
 }
@@ -133,6 +136,7 @@ input {
 
 .msg {
     padding: 0.25em;
+    color: white;
 }
 
 .msg-author {
