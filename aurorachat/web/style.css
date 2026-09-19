@@ -117,9 +117,18 @@ input {
     height: 90%;
 }
 
+#roominput {
+    border-bottom: 2px solid #088;
+}
+
+#msginput {
+    border-top: 2px solid #088;
+}
+
 #roominput, #msginput {
     display: flex;
     align-items: center;
+    background: #fff;
 }
 
 #msg, #room {
@@ -137,6 +146,7 @@ input {
 .msg {
     padding: 0.25em;
     color: white;
+    text-shadow: #000 2px 2px 0.25em;
 }
 
 .msg-author {
@@ -152,12 +162,11 @@ input {
 }
 
 a:link, a:visited {
-    color: #55f;
+    color: #ddf;
 }
 
 a:hover {
-    color: #f55;
-    text-shadow: #aaa 4px 4px 0.25em;
+    color: #faa;
 }
 
 .embedimg {
