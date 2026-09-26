@@ -68,6 +68,14 @@ viewposts - View posts on the room's bulletin board
                     })
                 break
 
+                case 'fish':
+                    core.pluginSend({
+                        author: config.name,
+                        room: msg.room,
+                        content: `fish`
+                    })
+                break
+
                 case 'online': 
                     client.onsend({
                         author: config.name,
