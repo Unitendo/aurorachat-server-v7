@@ -53,6 +53,7 @@ function init(core, config) {
                         content: `Commands available:
 help - Shows this
 implode - Implodes you
+fish - Fish
 online - Shows how many clients are online
 post <content> - Post a bulletin to the room's bulletin board
 viewposts - View posts on the room's bulletin board
@@ -65,6 +66,14 @@ viewposts - View posts on the room's bulletin board
                         author: config.name,
                         room: msg.room,
                         content: `${msg.author} has imploded!`
+                    })
+                break
+
+                case 'fish':
+                    core.pluginSend({
+                        author: config.name,
+                        room: msg.room,
+                        content: `fish`
                     })
                 break
 
