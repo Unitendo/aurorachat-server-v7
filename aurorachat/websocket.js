@@ -42,30 +42,35 @@ const WSServer = function(core, port) {
         })
 
         socket.on('message', data => {
-            const msgs = data.toString('utf-8').trim().split('\n')
-            for(const msg of msgs) {
-                const [command, ...args] = msg.split('|').map(v => decodeURIComponent(v).trim())
-                switch(command) {
-                    case 'history': {
-                        const [rawsize] = args
-                        let size = 0
-                        if(rawsize) 
-                            size = parseInt(rawsize)
-                        if(size == NaN) size = 0
-                        if(size < 0) size = 0
+            try {
+                const msgs = data.toString('utf-8').trim().split('\n')
+                for(const msg of msgs) {
+                    const [command, ...args] = msg.split('|').map(v => decodeURIComponent(v).trim())
+                    switch(command) {
+                        case 'history': {
+                            const [rawsize] = args
+                            let size = 0
+                            if(rawsize) 
+                                size = parseInt(rawsize)
+                            if(size == NaN) size = 0
+                            if(size < 0) size = 0
 
-                        let msgs = client.getRoomHistory().map(msg => `msg|${v7.encodeV7(msg.author)}|${v7.encodeV7(msg.content)}|\n`).join('')
-                        if(size) msgs = msgs.slice(-size)
+                            let msgs = client.getRoomHistory().map(msg => `msg|${v7.encodeV7(msg.author)}|${v7.encodeV7(msg.content)}|\n`).join('')
+                            if(size) msgs = msgs.slice(-size)
 
-                        socket.send(msgs)
-                    } break
+                            socket.send(msgs)
+                        } break
 
-                    default: {
-                        const response = v7(client, command, args)
-                        if(response)
-                            socket.send(response.map(v => v7.encodeV7(v)).join('|') + '|\n')
+                        default: {
+                            const response = v7(client, command, args)
+                            if(response)
+                                socket.send(response.map(v => v7.encodeV7(v)).join('|') + '|\n')
+                        }
                     }
                 }
+            } catch(e) {
+                console.error(e)
+                socket.send(`err|unknown_internal|\n`) // How did we get here?
             }
         })
 

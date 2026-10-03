@@ -35,6 +35,7 @@ arg: Optional arguments, each argument is terminated with a | (including the las
 
 ## Error codes ##
 
+- unknown_internal - Unknown internal server error
 - command_unknown - Specified command is not recognized by the server
 - args_bad - Improper arguments specified or arguments missing
 - user_exists - User already exists
