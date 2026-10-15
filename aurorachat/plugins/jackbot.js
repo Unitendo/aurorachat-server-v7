@@ -16,7 +16,7 @@ function init(core, config) {
      */
     function onmessage(msg, client) {
         if(msg.author === config.name) return msg
-        if(msg.content.includes("jack")) {
+        if(msg.content.toLowerCase().includes("jack")) {
             setTimeout(()=>{
                 core.pluginSend({
                     author: config.name,
