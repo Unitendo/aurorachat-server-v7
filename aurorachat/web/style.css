@@ -156,7 +156,8 @@ input {
 }
 
 .msg-content {
-    white-space: pre;
+    white-space: pre-wrap;
+    overflow-wrap: anywhere;
     font-size: 20px;
     padding: 0.25em;
 }

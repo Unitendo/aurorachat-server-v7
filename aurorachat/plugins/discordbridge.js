@@ -24,13 +24,23 @@ function init(core, config) {
         if(message.author.id === config.userId) return
         if(message.channel.id !== config.channelId) return
 
+        const msgcb = msg => {
+            senddiscordmsg(msg.author, msg.content)
+        }
+
         core.pluginSend({
             author: `${message.member.displayName} [DISCORD]`,
             room: config.room,
             content: message.content
-        }, msg => {
-            senddiscordmsg(msg.author, msg.content)
-        })
+        }, msgcb)
+
+        for(const at of message.attachments) {
+            core.pluginSend({
+                author: `${message.member.displayName} [DISCORD]`,
+                room: config.room,
+                content: at[1].url
+            }, msgcb)
+        }
     })
 
     /**
