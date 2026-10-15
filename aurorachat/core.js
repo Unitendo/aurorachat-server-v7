@@ -320,6 +320,7 @@ CoreServer.prototype.pluginPassthrough = function(msg, client) {
  * @param {MessageCallback} pluginreplycb
  */
 CoreServer.prototype.pluginSend = function(msg, pluginreplycb = function(msg){}) {
+    if(!msg.content) return
     const fakeclient = new CoreClient(this, '::1', pluginreplycb, () => {})
     for(const p of this.plugins) {
         p(msg, fakeclient)
