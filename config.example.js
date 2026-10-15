@@ -9,6 +9,7 @@ exports.REGISTER_DISABLED = false
 exports.SPAM_INTERVAL = 5000
 exports.SPAM_COUNT = 15
 exports.SPAM_COUNT_KICK = 25
+exports.SERVERMSG_SOCKET = '' // An alternative for server TTY messages, leave it empty or set it to something like "/var/aucserver"
 exports.PLUGINS = ['hausmeister', 'jackbot']
 exports.PLUGIN_CONFIG = {
     hausmeister: {

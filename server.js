@@ -1,5 +1,6 @@
 const fs = require('fs')
 const path = require('path')
+const net = require('net')
 
 const DATADIR = path.join(__dirname, 'aurorachat', 'data')
 
@@ -34,3 +35,22 @@ process.stdin.on('data', data => {
         content: msg.trim()
     })
 })
+
+if(config.SERVERMSG_SOCKET) {
+    const server = net.createServer(sock => {
+        sock.on('data', data => {
+            const msg = data.toString('utf-8')
+            core.send({
+                author: '[SERVER]',
+                room: undefined,
+                content: msg.trim()
+            })
+        })
+    })
+
+    server.listen(config.SERVERMSG_SOCKET)
+
+    process.on('exit', () => {
+        server.close()
+    })
+}
