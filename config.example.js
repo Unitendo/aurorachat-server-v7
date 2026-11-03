@@ -1,5 +1,6 @@
 exports.TCP_PORT = 7070
 exports.WS_PORT = 7071
+exports.GOOFY_TCP_PORT = 7072
 exports.WEB_PORT = 7080
 exports.SERVER_NAME = 'Unnamed Aurorachat V7 Server'
 exports.MAX_ROOM_HISTORY = 128

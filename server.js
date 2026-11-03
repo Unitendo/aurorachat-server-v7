@@ -12,6 +12,7 @@ if(!fs.existsSync(DATADIR)) {
 const config = require('./config')
 const Core = require('./aurorachat/core')
 const tcpserver = require('./aurorachat/tcp')
+const goofytcp = require('./aurorachat/goofytcp')
 const wsserver = require('./aurorachat/websocket')
 const webstuff = require('./aurorachat/webstuff')
 
@@ -21,6 +22,7 @@ const core = new Core(
     config.REGISTER_DISABLED, config.DEFAULT_MOTD
 )
 tcpserver(core, config.TCP_PORT)
+goofytcp(core, config.GOOFY_TCP_PORT)
 wsserver(core, config.WS_PORT)
 webstuff(core, config.WEB_PORT, config.MAX_EMBED_BACKLOG)
 core.loadPlugins(config.PLUGINS, config.PLUGIN_CONFIG)
