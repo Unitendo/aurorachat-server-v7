@@ -39,6 +39,9 @@ process.stdin.on('data', data => {
 })
 
 if(config.SERVERMSG_SOCKET) {
+    if(fs.existsSync(config.SERVERMSG_SOCKET)) 
+        fs.unlinkSync(config.SERVERMSG_SOCKET)
+
     const server = net.createServer(sock => {
         sock.on('data', data => {
             const msg = data.toString('utf-8')
