@@ -57,6 +57,7 @@ fish - Fish
 online - Shows how many clients are online
 post <content> - Post a bulletin to the room's bulletin board
 viewposts - View posts on the room's bulletin board
+aurorashart - aurorashart
 `
                     })
                 break
@@ -109,6 +110,14 @@ viewposts - View posts on the room's bulletin board
                         content: data
                     })
                 break
+
+                case 'aurorashart':
+                    core.pluginSend({
+                        author: config.name,
+                        room: msg.room,
+                        content: `i aurorasharted`
+                    })
+                    break
 
                 default:
                     client.onsend({

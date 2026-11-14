@@ -14,7 +14,7 @@ Uploads an embed image to the server.
 Headers:
 
 - Authorization: `V7 login|password|`, where login and password are the V7-Encoded credentials of a user.
-- Content-Type: either `image/png` or `image/gif`.
+- Content-Type: either `image/png`, `image/jpeg` (converted to png) or `image/gif`.
 
 POST Body:
 
