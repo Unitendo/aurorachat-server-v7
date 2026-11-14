@@ -10,6 +10,7 @@ const path = require('path')
 const uuid = require('uuid')
 const { encodeV7 } = require('./v7')
 const antivpn = require('./antivpn')
+const { execFile } = require('child_process')
 
 const HASH_ROUNDS = 12
 const ADMINFILE = path.join(__dirname, 'data', 'admins.json')
@@ -40,9 +41,9 @@ function loadAdminList() {
 }
 
 /**
- * @param {String} login 
+ * @param {String} login
  * @param {String} passwd
- * @returns {User | undefined} 
+ * @returns {User | undefined}
  */
 function checkCreds(login, passwd) {
     const users = loadAdminList()
@@ -53,12 +54,12 @@ function checkCreds(login, passwd) {
 }
 
 /**
- * @param {import('./core')} core 
- * @param {express.Express} app 
+ * @param {import('./core')} core
+ * @param {express.Express} app
  */
 function adminpanel(core, app) {
     /**
-     * @param {express.Request} req 
+     * @param {express.Request} req
      */
     function getSession(req) {
         const cookie = req.cookies.session
@@ -71,8 +72,8 @@ function adminpanel(core, app) {
     }
 
     /**
-     * @param {express.Request} req 
-     * @param {express.Response} res 
+     * @param {express.Request} req
+     * @param {express.Response} res
      */
     function sessionCheck(req, res) {
         const session = getSession(req)
@@ -275,7 +276,7 @@ function adminpanel(core, app) {
         res.redirect('/adminpanel/')
 
         const motd = String(req.body.motd)
-        if(!motd) 
+        if(!motd)
             return
 
         core.motd = motd.replace('\r', '')
@@ -295,16 +296,35 @@ function adminpanel(core, app) {
     })
 }
 
+async function ffmpeg(buffer) {
+    const id = uuid.v4()
+    const input = path.join(__dirname, 'data', `${id}.jpeg`)
+    const output = path.join(__dirname, 'data', `${id}.png`)
+    try {
+        await fs.promises.writeFile(input, buffer)
+        await new Promise((resolve, reject) => {
+            execFile('ffmpeg', ['-i', input, output], error => {
+                if(error) reject(error)
+                    else resolve()
+            })
+        })
+        return await fs.promises.readFile(output)
+    } finally {
+        await fs.promises.unlink(input).catch(() => {})
+        await fs.promises.unlink(output).catch(() => {})
+    }
+}
+
 /**
- * @param {import('./core')} core 
- * @param {express.Express} app 
- * @param {Number} maxembedbacklog 
+ * @param {import('./core')} core
+ * @param {express.Express} app
+ * @param {Number} maxembedbacklog
  */
 function embedserver(core, app, maxembedbacklog) {
     /**
-     * @param {Buffer} buffer 
-     * @param {String} type 
-     * @param {String} author 
+     * @param {Buffer} buffer
+     * @param {String} type
+     * @param {String} author
      */
     function Embed(buffer, type, author) {
         this.buffer = buffer
@@ -316,7 +336,7 @@ function embedserver(core, app, maxembedbacklog) {
      * @type { Object.<string, Embed> }
      */
     let embedlist = {}
-    
+
     function getUniqueEID() {
         let eid = uuid.v4()
         while(eid in embedlist)
@@ -337,16 +357,16 @@ function embedserver(core, app, maxembedbacklog) {
             if(!isbad) return
             core.banIP(ip)
         } )
-        
+
         next()
     })
 
     app.use('/embeds', bodyParser.raw({
-        type: ['image/png', 'image/gif'],
+        type: ['image/png', 'image/jpeg', 'image/gif'],
         limit: '1MB'
     }))
 
-    app.post('/embeds', (req, res) => {
+    app.post('/embeds', async (req, res) => {
         if(!req.body) return res.status(400).end()
         const authhdr = req.headers.authorization
         if(!authhdr) return res.status(401).setHeader('WWW-Authenticate', 'V7').end()
@@ -359,8 +379,20 @@ function embedserver(core, app, maxembedbacklog) {
         if(user.checkFlag('BANNED')) return res.status(403).end()
         if(user.checkFlag('MUTED')) return res.status(403).end()
 
+        let buffer = req.body
+        let type = req.headers['content-type'].split(";")[0].toLowerCase()
+        if(type === 'image/jpeg') {
+            try {
+                buffer = await ffmpeg(buffer)
+                type = 'image/png'
+            } catch(e) {
+                console.warn(`FFmpeg conversion failed: ${e.message}`)
+                return res.status(400).end()
+            }
+        }
+
         const eid = getUniqueEID()
-        embedlist[eid] = new Embed(req.body, req.headers['content-type'], login)
+        embedlist[eid] = new Embed(buffer, type, login)
 
         console.log(`Embed ${eid} added by ${login} (${req.socket.remoteAddress})`)
 
@@ -390,9 +422,9 @@ function embedserver(core, app, maxembedbacklog) {
 }
 
 /**
- * @param {import('./core')} core 
- * @param {Number} port 
- * @param {Number} maxembedbacklog 
+ * @param {import('./core')} core
+ * @param {Number} port
+ * @param {Number} maxembedbacklog
  */
 const WebServer = function(core, port, maxembedbacklog) {
     const app = express()

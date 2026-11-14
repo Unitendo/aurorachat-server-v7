@@ -228,7 +228,7 @@ window.addEventListener('load', e => {
     embedbtn.addEventListener('click', () => {
         const fileinput = document.createElement('input')
         fileinput.type = 'file'
-        fileinput.accept = 'image/png,image/gif'
+        fileinput.accept = 'image/png,image/jpeg,image/gif'
 
         fileinput.addEventListener('change', async e => {
             try {
