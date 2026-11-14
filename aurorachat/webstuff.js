@@ -387,7 +387,7 @@ function embedserver(core, app, maxembedbacklog) {
                 type = 'image/png'
             } catch(e) {
                 console.warn(`FFmpeg conversion failed: ${e.message}`)
-                return res.status(400).end()
+                return res.status(500).end()
             }
         }
 
