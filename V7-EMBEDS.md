@@ -14,11 +14,11 @@ Uploads an embed image to the server.
 Headers:
 
 - Authorization: `V7 login|password|`, where login and password are the V7-Encoded credentials of a user.
-- Content-Type: either `image/png` or `image/gif`.
+- Content-Type: either `image/png`, `image/jpeg` or `image/gif`.
 
 POST Body:
 
-Raw PNG or GIF image data. Up to 1MB.
+Raw PNG, JPEG or GIF image data. Up to 1MB.
 
 Responses:
 
@@ -26,6 +26,11 @@ Responses:
 - 400 - Improper content type or data too large.
 - 401 - Improper auth format or bad credentials.
 - 403 - IP-Banned, or the user tied to the login is either banned or muted.
+- 500 - Internal server failure, most likely caused by image conversion
+
+Note:
+
+JPEG images get converted to PNG on the server.
 
 ## GET /embeds/:embedid ##
 
@@ -40,6 +45,10 @@ Responses:
 - 200 - PNG or GIF data of embed. Content type is specified in the HTTP `Content-Type` Header.
 - 403 - IP-Banned.
 - 404 - Embed ID is invalid or embed has expired.
+
+Note:
+
+Returned PNG images can be larger than 1MB, as JPEG images get converted to PNG
 
 ## GET /embeds/:embedid/info ##
 
