@@ -18,7 +18,7 @@ function init(core, config) {
     /**
      * @typedef { { author: string, content: string } } Bulletin
      */
-    const dataFilePath = path.join(__dirname, 'bulletins.json')
+    const dataFilePath = path.join(core.datadir, 'bulletins.json')
     /**
      * @type { Object.<string, Bulletin[] | undefined> }
      */

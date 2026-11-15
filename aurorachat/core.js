@@ -1,6 +1,7 @@
 const users = require('./users')
 const ip = require('ip-address')
 const ejs = require('ejs')
+const path = require('path')
 
 /**
  * @typedef { { author: string, room: string, content: string } } Message
@@ -195,6 +196,8 @@ const CoreServer = function(servername, maxroomhistory, serverrules, spaminterva
      * @type {PluginMessageCallback[]}
      */
     this.plugins = []
+
+    this.datadir = path.join(__dirname, 'data') // For plugin use
 }
 
 /**
