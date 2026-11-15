@@ -136,14 +136,7 @@ aurorashart - aurorashart
                         room: msg.room,
                         content: `i aurorasharted`
                     })
-                    break
-                case 'wasseen':
-                    core.pluginSend({
-                        author: config.name,
-                        room: msg.room,
-                        content: `hey not cool thats my full name`
-                    })
-                    break
+                break
 
                 default:
                     client.onsend({
