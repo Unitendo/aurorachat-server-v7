@@ -1,5 +1,5 @@
-const fs = require('fs');
-const path = require('path');
+const fs = require('fs')
+const path = require('path')
 /**
  * @param {import('../core')} core 
  * @param { {name: string, prefix: string} } config
@@ -18,26 +18,26 @@ function init(core, config) {
     /**
      * @typedef { { author: string, content: string } } Bulletin
      */
-    const dataFilePath = path.join(__dirname, 'bulletins.json');
+    const dataFilePath = path.join(__dirname, 'bulletins.json')
     /**
      * @type { Object.<string, Bulletin[] | undefined> }
      */
-    let bulletins = {};
+    let bulletins = {}
     try {
         if (fs.existsSync(dataFilePath)) {
-            const rawData = fs.readFileSync(dataFilePath, 'utf8');
-            bulletins = JSON.parse(rawData);
-            log('Loaded bulletin board data from bulletins.json');
+            const rawData = fs.readFileSync(dataFilePath, 'utf8')
+            bulletins = JSON.parse(rawData)
+            log('Loaded bulletin board data from bulletins.json')
         }
     } catch (err) {
-        log('Error loading bulletins.json:', err);
-        bulletins = {};
+        log('Error loading bulletins.json:', err)
+        bulletins = {}
     }
     function saveBulletins() {
         try {
-            fs.writeFileSync(dataFilePath, JSON.stringify(bulletins, null, 2), 'utf8');
+            fs.writeFileSync(dataFilePath, JSON.stringify(bulletins, null, 2), 'utf8')
         } catch (err) {
-            log('Error saving bulletins.json:', err);
+            log('Error saving bulletins.json:', err)
         }
     }
     function postBulletin(author, room, content) {
