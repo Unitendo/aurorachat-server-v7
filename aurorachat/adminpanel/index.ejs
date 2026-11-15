@@ -18,11 +18,47 @@
         </fieldset>
 
         <fieldset>
+            <legend><b>IP lookup</b></legend>
+            <form action="/adminpanel/ip">
+                IP: <input type="text" name="ip"><br>
+                <button type="submit">Find</button>
+            </form>
+        </fieldset>
+
+        <fieldset>
+            <legend><b>IP Ban</b></legend>
+            <form action="/adminpanel/ipban" method="post">
+                IP: <input type="text" name="ip"><br>
+                Add IP Ban <input type="radio" name="mode" value="add" checked><br>
+                Remove IP Ban <input type="radio" name="mode" value="remove"><br>
+                <button type="submit">Set</button>
+            </form>
+            <a href="/adminpanel/listipbans">List IP Bans</a>
+        </fieldset>
+
+        <fieldset>
+            <legend><b>Create User</b></legend>
+            <form action="/adminpanel/createuser" method="post">
+                Username: <input type="text" name="login"><br>
+                Password: <input type="password" name="passwd"><br>
+                <button type="submit">Create</button>
+            </form>
+        </fieldset>
+
+        <fieldset>
+            <legend><b>MOTD</b></legend>
+            <form action="/adminpanel/motd" method="post">
+                <textarea name="motd"><%= motd %></textarea><br>
+                <button type="submit">Set</button>
+            </form>
+        </fieldset>
+
+        <fieldset>
             <legend><b>BCrypt Password</b></legend>
             <form action="/adminpanel/bcrypt" method="post">
                 Password: <input type="text" name="passwd"><br>
                 <% if(req.query.hash) { %>
-                <pre><%- req.query.hash %> </pre>
+                <pre><%= req.query.hash %> </pre>
                 <% } %>
                 <button type="submit">Hash</button>
             </form>

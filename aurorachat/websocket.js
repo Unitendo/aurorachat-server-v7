@@ -1,12 +1,12 @@
 const ws = require('ws')
 const v7 = require('./v7')
+const antivpn = require('./antivpn')
 
 /**
  * @param {import('./core')} core 
- * @param {Number} port 
- * @param {string} servername
+ * @param {Number} port
  */
-const WSServer = function(core, port, servername) {
+const WSServer = function(core, port) {
     const server = new ws.WebSocketServer({
         port
     }, () => console.log('WS server on port', port))
@@ -25,7 +25,16 @@ const WSServer = function(core, port, servername) {
         
         const client = core.connect(ip, msg => {
             socket.send(`msg|${v7.encodeV7(msg.author)}|${v7.encodeV7(msg.content)}|\n`)
+        }, () => {
+            socket.close()
         })
+
+        antivpn(ip).then( isbad => {
+            if(!isbad) return
+            client.disconnect()
+            socket.close()
+            core.banIP(ip)
+        } )
 
         socket.on('close', code => {
             client.disconnect()
@@ -33,34 +42,39 @@ const WSServer = function(core, port, servername) {
         })
 
         socket.on('message', data => {
-            const msgs = data.toString('utf-8').trim().split('\n')
-            for(const msg of msgs) {
-                const [command, ...args] = msg.split('|').map(v => decodeURIComponent(v).trim())
-                switch(command) {
-                    case 'history': {
-                        const [rawsize] = args
-                        let size = 0
-                        if(rawsize) 
-                            size = parseInt(rawsize)
-                        if(size == NaN) size = 0
-                        if(size < 0) size = 0
+            try {
+                const msgs = data.toString('utf-8').trim().split('\n')
+                for(const msg of msgs) {
+                    const [command, ...args] = msg.split('|').map(v => decodeURIComponent(v).trim())
+                    switch(command) {
+                        case 'history': {
+                            const [rawsize] = args
+                            let size = 0
+                            if(rawsize) 
+                                size = parseInt(rawsize)
+                            if(size == NaN) size = 0
+                            if(size < 0) size = 0
 
-                        let msgs = client.getRoomHistory().map(msg => `msg|${v7.encodeV7(msg.author)}|${v7.encodeV7(msg.content)}|\n`).join('')
-                        if(size) msgs = msgs.slice(-size)
+                            let msgs = client.getRoomHistory().map(msg => `msg|${v7.encodeV7(msg.author)}|${v7.encodeV7(msg.content)}|\n`).join('')
+                            if(size) msgs = msgs.slice(-size)
 
-                        socket.send(msgs)
-                    } break
+                            socket.send(msgs)
+                        } break
 
-                    default: {
-                        const response = v7(client, command, args)
-                        if(response)
-                            socket.send(response.map(v => v7.encodeV7(v)).join('|') + '|\n')
+                        default: {
+                            const response = v7(client, command, args)
+                            if(response)
+                                socket.send(response.map(v => v7.encodeV7(v)).join('|') + '|\n')
+                        }
                     }
                 }
+            } catch(e) {
+                console.error(e)
+                socket.send(`err|unknown_internal|\n`) // How did we get here?
             }
         })
 
-        socket.send(`hello|v7|${v7.encodeV7(servername)}|\n`)
+        socket.send(`hello|v7|${v7.encodeV7(core.servername)}|\n`)
     })
 }
 

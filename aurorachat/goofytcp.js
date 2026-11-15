@@ -1,0 +1,91 @@
+const net = require('net')
+const v7 = require('./v7')
+const antivpn = require('./antivpn')
+// Made for a certain in development client that doesn't work well with non-terminating TCP.
+/**
+ * @param {import('./core')} core 
+ * @param {Number} port
+ */
+/**
+ * @param {import('./core')} core 
+ * @param {Number} port
+ */
+const GoofyTCPServer = function(core, port) {
+    const server = net.createServer(socket => {
+        const rawip = socket.remoteAddress
+        const ip = core.computeIP(rawip)
+        if(core.checkIPBan(ip)) {
+            socket.write(`ipbanned|\n`)
+            socket.destroy()
+            console.warn(`Attempted IP-Ban connection from ${ip} (${rawip})`)
+            return
+        }
+
+        console.log(`Connection from ${ip} (${rawip})`)
+
+        const client = core.connect(ip, msg => {
+            socket.write(`msg|${v7.encodeV7(msg.author)}|${v7.encodeV7(msg.content)}|\n`)
+        }, () => {
+            socket.destroy()
+        })
+
+        antivpn(ip).then( isbad => {
+            if(!isbad) return
+            client.disconnect()
+            socket.destroy()
+            core.banIP(ip)
+        } )
+
+        socket.on('close', err => {
+            client.disconnect()
+            console.log(`Goodbye ${ip} (${rawip})`)
+        })
+
+        socket.on('data', data => {
+            try {
+                const msgs = data.toString('utf-8').trim().split('\n')
+                for(const msg of msgs) {
+                    const [command, ...args] = msg.split('|').map(v => decodeURIComponent(v).trim())
+                    switch(command) {
+                        case 'history': {
+                            const [rawsize] = args
+                            let size = 0
+                            if(rawsize) 
+                                size = parseInt(rawsize)
+                            if(size == NaN) size = 0
+                            if(size < 0) size = 0
+
+                            let msgs = client.getRoomHistory().map(msg => `msg|${v7.encodeV7(msg.author)}|${v7.encodeV7(msg.content)}|\n`).join('')
+                            if(size) msgs = msgs.slice(-size)
+
+                            socket.write(msgs)
+                        } break
+                        case 'quit': {
+                            socket.end()
+                        } break
+
+                        default: {
+                            const response = v7(client, command, args)
+                            if(response)
+                                socket.write(response.map(v => v7.encodeV7(v)).join('|') + '|\n')
+                        }
+                    }
+                }
+            } catch(e) {
+                console.error(e)
+                socket.write(`err|unknown_internal|\n`) // How did we get here?
+            }
+        })
+
+        socket.on('error', e => {
+            console.error(e, `Error on ${ip} (${rawip})`)
+            client.disconnect()
+            socket.destroy()
+        })
+
+        socket.write(`hello|v7|${v7.encodeV7(core.servername)}|\n`)
+    } )
+    server.listen(port, () => console.log('goofy ahh TCP server on port', port))
+}
+
+module.exports = GoofyTCPServer

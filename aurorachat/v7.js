@@ -34,6 +34,10 @@ function parseV7Command(client, command, args) {
             return ['ok']
         }
 
+        case 'motd': {
+            return ['motd', client.getServerMOTD()]
+        }
+
         case 'rules': {
             return ['rules', client.getServerRules()]
         }
@@ -41,7 +45,7 @@ function parseV7Command(client, command, args) {
         case 'join':
             if(args.length < 1) return ['err', 'args_bad']
             const [room] = args
-            client.room = room
+            client.joinRoom(room)
         break
 
         case 'part':

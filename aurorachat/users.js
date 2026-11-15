@@ -165,6 +165,13 @@ function unbanIP(ip){
     ipbans.splice(idx, 1)
 }
 
+/**
+ * @returns {String[]}
+ */
+function getIPBans() {
+    return ipbans
+}
+
 function tryLoadUsers() {
     try {
         console.log('Loading users.')
@@ -213,5 +220,6 @@ module.exports.checkIPBan = checkIPBan
 module.exports.banIP = banIP
 module.exports.unbanIP = unbanIP
 module.exports.userSaveInterval = userSaveInterval
+module.exports.getIPBans = getIPBans
 
 tryLoadUsers()

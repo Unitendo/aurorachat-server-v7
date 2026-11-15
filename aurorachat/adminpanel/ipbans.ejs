@@ -1,0 +1,18 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>Aurorachat Admin Panel - IP Bans</title>
+    </head>
+    <body>
+        <h1>IP Bans</h1>
+        <a href="/adminpanel/">Back</a>
+        <p>
+            IP Banned IPs:<br>
+            <% for(const i of ips) { %>
+                <a href="/adminpanel/ip?ip=<%= i %>" target="_blank"><%= i %></a><br>
+            <% } %>
+        </p>
+    </body>
+</html>

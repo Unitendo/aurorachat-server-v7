@@ -1,4 +1,4 @@
-# Aurorachat V7 #
+# AuroraChat V7 #
 
 ## Message structure ##
 
@@ -17,6 +17,7 @@ arg: Optional arguments, each argument is terminated with a | (including the las
 - login|login|passwd| - Logs user in
 - register|login|passwd| - Creates a user
 - rules| - Gets server rules
+- motd| - Gets server MOTD
 - join|room| - Joins a room (Leaves any previous room)
 - part| - Leaves current room
 - history|optionalsize| - Gets message history for current room. Optionally a size parameter can be given, sending the last n bytes.
@@ -29,14 +30,26 @@ arg: Optional arguments, each argument is terminated with a | (including the las
 - ok| - Command succeeded
 - err|errcode| - Command failed, error code specified
 - rules|rules| - Server rules
+- motd|motd| - Server MOTD
 - msg|user|msg| - Message from user
 
 ## Error codes ##
 
+- unknown_internal - Unknown internal server error
 - command_unknown - Specified command is not recognized by the server
 - args_bad - Improper arguments specified or arguments missing
 - user_exists - User already exists
 - register_failure - User registration failed (most likely a bad username)
+- register_disabled - User registration disabled on server
+- bad_login - User login failed (a bad username or password)
+- banned|ban_reason - User was banned, a reason is also specified
+
+## Direct Messages ##
+
+Direct messages can be achieved by setting the channel name to `@username`
+where `username` is the login of the other person.
+If both people set the channels to eachother's usernames, messages can be sent privately between them.
+Plugins cannot be used in DMs.
 
 ## Example communication ##
 

@@ -1,14 +1,14 @@
 const net = require('net')
 const v7 = require('./v7')
+const antivpn = require('./antivpn')
 
 /**
  * @param {import('./core')} core 
- * @param {Number} port 
- * @param {string} servername
+ * @param {Number} port
  */
-const TCPServer = function(core, port, servername) {
+const TCPServer = function(core, port) {
     const server = net.createServer(socket => {
-        const rawip = socket.address().address
+        const rawip = socket.remoteAddress
         const ip = core.computeIP(rawip)
         if(core.checkIPBan(ip)) {
             socket.write(`ipbanned|\n`)
@@ -21,7 +21,16 @@ const TCPServer = function(core, port, servername) {
 
         const client = core.connect(ip, msg => {
             socket.write(`msg|${v7.encodeV7(msg.author)}|${v7.encodeV7(msg.content)}|\n`)
+        }, () => {
+            socket.destroy()
         })
+
+        antivpn(ip).then( isbad => {
+            if(!isbad) return
+            client.disconnect()
+            socket.destroy()
+            core.banIP(ip)
+        } )
 
         socket.on('close', err => {
             client.disconnect()
@@ -29,30 +38,35 @@ const TCPServer = function(core, port, servername) {
         })
 
         socket.on('data', data => {
-            const msgs = data.toString('utf-8').trim().split('\n')
-            for(const msg of msgs) {
-                const [command, ...args] = msg.split('|').map(v => decodeURIComponent(v).trim())
-                switch(command) {
-                    case 'history': {
-                        const [rawsize] = args
-                        let size = 0
-                        if(rawsize) 
-                            size = parseInt(rawsize)
-                        if(size == NaN) size = 0
-                        if(size < 0) size = 0
+            try {
+                const msgs = data.toString('utf-8').trim().split('\n')
+                for(const msg of msgs) {
+                    const [command, ...args] = msg.split('|').map(v => decodeURIComponent(v).trim())
+                    switch(command) {
+                        case 'history': {
+                            const [rawsize] = args
+                            let size = 0
+                            if(rawsize) 
+                                size = parseInt(rawsize)
+                            if(size == NaN) size = 0
+                            if(size < 0) size = 0
 
-                        let msgs = client.getRoomHistory().map(msg => `msg|${v7.encodeV7(msg.author)}|${v7.encodeV7(msg.content)}|\n`).join('')
-                        if(size) msgs = msgs.slice(-size)
+                            let msgs = client.getRoomHistory().map(msg => `msg|${v7.encodeV7(msg.author)}|${v7.encodeV7(msg.content)}|\n`).join('')
+                            if(size) msgs = msgs.slice(-size)
 
-                        socket.write(msgs)
-                    } break
+                            socket.write(msgs)
+                        } break
 
-                    default: {
-                        const response = v7(client, command, args)
-                        if(response)
-                            socket.write(response.map(v => v7.encodeV7(v)).join('|') + '|\n')
+                        default: {
+                            const response = v7(client, command, args)
+                            if(response)
+                                socket.write(response.map(v => v7.encodeV7(v)).join('|') + '|\n')
+                        }
                     }
                 }
+            } catch(e) {
+                console.error(e)
+                socket.write(`err|unknown_internal|\n`) // How did we get here?
             }
         })
 
@@ -62,7 +76,7 @@ const TCPServer = function(core, port, servername) {
             socket.destroy()
         })
 
-        socket.write(`hello|v7|${v7.encodeV7(servername)}|\n`)
+        socket.write(`hello|v7|${v7.encodeV7(core.servername)}|\n`)
     } )
     server.listen(port, () => console.log('TCP server on port', port))
 }

@@ -24,7 +24,7 @@ const v6users = JSON.parse(fs.readFileSync(file, 'utf-8')).users
 const v7users = []
 
 for(const u of v6users) {
-    const a = computeIP(u.ip)
+    const a = u.ip ? computeIP(u.ip) : undefined
 
     const v = {
         uid: uuid(),
