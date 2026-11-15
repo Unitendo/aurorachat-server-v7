@@ -1,3 +1,5 @@
+const fs = require('fs')
+const path = require('path')
 /**
  * @param {import('../core')} core 
  * @param { {name: string, prefix: string} } config
@@ -16,17 +18,34 @@ function init(core, config) {
     /**
      * @typedef { { author: string, content: string } } Bulletin
      */
-
+    const dataFilePath = path.join(core.datadir, 'bulletins.json')
     /**
      * @type { Object.<string, Bulletin[] | undefined> }
      */
-    const bulletins = {}
-
+    let bulletins = {}
+    try {
+        if (fs.existsSync(dataFilePath)) {
+            const rawData = fs.readFileSync(dataFilePath, 'utf8')
+            bulletins = JSON.parse(rawData)
+            log('Loaded bulletin board data from bulletins.json')
+        }
+    } catch (err) {
+        log('Error loading bulletins.json:', err)
+        bulletins = {}
+    }
+    function saveBulletins() {
+        try {
+            fs.writeFileSync(dataFilePath, JSON.stringify(bulletins, null, 2), 'utf8')
+        } catch (err) {
+            log('Error saving bulletins.json:', err)
+        }
+    }
     function postBulletin(author, room, content) {
         if(!(room in bulletins))
             bulletins[room] = []
         bulletins[room].push({author, content})
         bulletins[room] = bulletins[room].slice(-config.bulletinLimit)
+        saveBulletins()
     }
 
     /**
@@ -117,7 +136,15 @@ aurorashart - aurorashart
                         room: msg.room,
                         content: `i aurorasharted`
                     })
-                    break
+                break
+
+                case 'coolguy':
+                    core.pluginSend({
+                        author: config.name,
+                        room: msg.room,
+                        content: `you just got cooled!`
+                    })
+                break
 
                 default:
                     client.onsend({
