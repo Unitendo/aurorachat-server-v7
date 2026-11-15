@@ -1,9 +1,25 @@
 require('dns').setDefaultResultOrder('ipv4first');
 const { Address6 } = require('ip-address')
+const fs = require('fs')
+const path = require('path')
 
 const goodlist = [
     '127.0.0.1', '::1'
 ]
+
+const GOODLISTPATH = path.join(__dirname, 'data', 'goodlist.json')
+
+try {
+    if(!fs.existsSync(GOODLISTPATH))
+        fs.writeFileSync(GOODLISTPATH, '[]')
+
+    const data = JSON.parse(fs.readFileSync(GOODLISTPATH, 'utf-8'))
+    for(const ip of data) {
+        if(!goodlist.includes(ip)) goodlist.push(ip)
+    }
+} catch(e) {
+    console.warn(e, 'Could not load goodlist!')
+}
 
 /**
  * @param {String} ip 
