@@ -138,6 +138,14 @@ aurorashart - aurorashart
                     })
                 break
 
+                case 'coolguy':
+                    core.pluginSend({
+                        author: config.name,
+                        room: msg.room,
+                        content: `you just got cooled!`
+                    })
+                break
+
                 default:
                     client.onsend({
                         author: config.name,
