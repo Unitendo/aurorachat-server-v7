@@ -4,7 +4,7 @@ const ejs = require('ejs')
 const path = require('path')
 
 /**
- * @typedef { { author: string, room: string, content: string } } Message
+ * @typedef { { author: string, room: string, content: string, timestamp: Number | undefined } } Message
  */
 
 /**
@@ -216,6 +216,7 @@ CoreServer.prototype.connect = function(ip, onsend, onkick) {
  * @param {Message} msg 
  */
 CoreServer.prototype.send = function(msg) {
+    msg.timestamp = Date.now()
     console.log(msg)
 
     if(msg.room) {
