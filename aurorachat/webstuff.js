@@ -434,6 +434,9 @@ const WebServer = function(core, port, maxembedbacklog) {
     embedserver(core, app, maxembedbacklog)
 
     app.use('/web/', express.static(path.join(__dirname, 'web')))
+    app.get('/favicon.ico', (req, res) => {
+        res.redirect('/web/favicon.ico')
+    })
     app.get('/', (req, res) => {
         res.redirect('/web/')
     })

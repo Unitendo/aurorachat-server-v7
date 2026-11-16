@@ -114,20 +114,30 @@ window.addEventListener('load', e => {
         return text.replace(urlregex, '<a href="$1" target="_blank">$1</a>')
     }
 
-    function onMessage(author, msg) {
+    function onMessage(author, msg, timestamp) {
         const msgdiv = document.createElement('div')
         const authordiv = document.createElement('div')
+        const sendtimespan = document.createElement('span')
         const contentdiv = document.createElement('div')
 
         msgdiv.classList.add('msg')
         authordiv.classList.add('msg-author')
+        sendtimespan.classList.add('msg-time')
         contentdiv.classList.add('msg-content')
 
         authordiv.innerText = author
         contentdiv.innerText = msg
         contentdiv.innerHTML = urlify(contentdiv.innerHTML)
 
+        authordiv.append(sendtimespan)
         msgdiv.append(authordiv, contentdiv)
+
+        try {
+            const t = parseInt(timestamp) * 1000
+            if(isNaN(t)) throw new Error('NaN')
+            const d = new Date(t)
+            sendtimespan.innerText = `${d.getHours()}:${d.getMinutes() < 10 ? '0' : ''}${d.getMinutes()}`
+        } catch(e) {} // Bad timestamp, is the server OK?
 
         try {
             const embedurl = new URL(msg)
