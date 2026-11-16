@@ -24,7 +24,7 @@ const GoofyTCPServer = function(core, port) {
         console.log(`Connection from ${ip} (${rawip})`)
 
         const client = core.connect(ip, msg => {
-            socket.write(`msg|${v7.encodeV7(msg.author)}|${v7.encodeV7(msg.content)}|\n`)
+            socket.write(`msg|${v7.encodeV7(msg.author)}|${v7.encodeV7(msg.content)}|${msg.timestamp}|\n`)
         }, () => {
             socket.destroy()
         })
@@ -55,7 +55,7 @@ const GoofyTCPServer = function(core, port) {
                             if(size == NaN) size = 0
                             if(size < 0) size = 0
 
-                            let msgs = client.getRoomHistory().map(msg => `msg|${v7.encodeV7(msg.author)}|${v7.encodeV7(msg.content)}|\n`).join('')
+                            let msgs = client.getRoomHistory().map(msg => `msg|${v7.encodeV7(msg.author)}|${v7.encodeV7(msg.content)}|${msg.timestamp}|\n`).join('')
                             if(size) msgs = msgs.slice(-size)
 
                             socket.write(msgs)

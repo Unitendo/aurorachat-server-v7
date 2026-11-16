@@ -31,7 +31,7 @@ arg: Optional arguments, each argument is terminated with a | (including the las
 - err|errcode| - Command failed, error code specified
 - rules|rules| - Server rules
 - motd|motd| - Server MOTD
-- msg|user|msg| - Message from user
+- msg|user|msg|timestamp| - Message from user
 
 ## Error codes ##
 
@@ -69,13 +69,13 @@ Comments are marked with `#`
 < join|general|
 # Client joins room general
 < history|1024|
-> msg|jakub|balls :3|
+> msg|jakub|balls :3|1754654400|
 # Client requests 1024 bytes of room message history
-> msg|jakub|This is V7|
-> msg|3pm|Fancy message%0awith newlines|
-> msg|orstando|segfault|
+> msg|jakub|This is V7|1754654401|
+> msg|3pm|Fancy message%0awith newlines|1754654410|
+> msg|orstando|segfault|1754654420|
 # Incoming messages from client on same room
 < msg|Hello World!|
-> msg|myname|Hello World!|
+> msg|myname|Hello World!|1754654430|
 # Outgoing message to clients on room
 ```
