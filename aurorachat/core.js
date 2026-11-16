@@ -216,7 +216,7 @@ CoreServer.prototype.connect = function(ip, onsend, onkick) {
  * @param {Message} msg 
  */
 CoreServer.prototype.send = function(msg) {
-    msg.timestamp = Date.now()
+    msg.timestamp = parseInt(Date.now() / 1000)
     console.log(msg)
 
     if(msg.room) {
