@@ -55,7 +55,7 @@ const WSServer = function(core, port) {
                             if(size == NaN) size = 0
                             if(size < 0) size = 0
 
-                            let msgs = client.getRoomHistory().map(msg => `msg|${v7.encodeV7(msg.author)}|${v7.encodeV7(msg.content)}|\n`).join('')
+                            let msgs = client.getRoomHistory().map(msg => `msg|${v7.encodeV7(msg.author)}|${v7.encodeV7(msg.content)}|${msg.timestamp}|\n`).join('')
                             if(size) msgs = msgs.slice(-size)
 
                             socket.send(msgs)

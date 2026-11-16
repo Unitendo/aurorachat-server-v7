@@ -114,7 +114,7 @@ window.addEventListener('load', e => {
         return text.replace(urlregex, '<a href="$1" target="_blank">$1</a>')
     }
 
-    function onMessage(author, msg) {
+    function onMessage(author, msg, timestamp) {
         const msgdiv = document.createElement('div')
         const authordiv = document.createElement('div')
         const contentdiv = document.createElement('div')
@@ -123,7 +123,7 @@ window.addEventListener('load', e => {
         authordiv.classList.add('msg-author')
         contentdiv.classList.add('msg-content')
 
-        authordiv.innerText = author
+        authordiv.innerText = author + (timestamp ? ' [' + new Date(Number(timestamp)).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }) + ']' : '')
         contentdiv.innerText = msg
         contentdiv.innerHTML = urlify(contentdiv.innerHTML)
 
