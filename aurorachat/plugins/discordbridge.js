@@ -1,12 +1,12 @@
 const {Client, Events, GatewayIntentBits} = require('discord.js');
 
 /**
- * @param {import('../core')} core 
+ * @param {import('../core')} core
  * @param { {channelId: string, token: string, userId: string, room: string} } config
- * @returns {Function} 
+ * @returns {Function}
  */
 function init(core, config) {
-    const client = new Client({ 
+    const client = new Client({
         intents: [GatewayIntentBits.Guilds, GatewayIntentBits.GuildMessages, GatewayIntentBits.MessageContent]
     })
     var channel = null
@@ -29,9 +29,13 @@ function init(core, config) {
         }
 
         core.pluginSend({
-            author: `${message.member.displayName} [DISCORD]`,
+            author: `${message.member?.displayName ?? message.author.username} [DISCORD]`,
             room: config.room,
-            content: message.content
+            content: message.content.replace(/<@!?(\d+)>/g, (match, id) => {
+                const user = message.mentions.users.get(id)
+                const member = message.mentions.members?.get(id)
+                return user ? `@${member?.displayName ?? user.username}` : match
+            })
         }, msgcb)
 
         for(const at of message.attachments) {
@@ -44,8 +48,8 @@ function init(core, config) {
     })
 
     /**
-     * @param {import('../core').Message} msg 
-     * @returns 
+     * @param {import('../core').Message} msg
+     * @returns
      */
     function onmessage(msg, _) {
         if(msg.author.endsWith('[DISCORD]')) return msg
@@ -60,7 +64,7 @@ function init(core, config) {
 
     log('Loaded')
     client.login(config.token)
-    
+
     return onmessage
 }
 
