@@ -15,7 +15,7 @@ function init(core, config) {
      * @returns 
      */
     function onmessage(msg, client) {
-        if(msg.author === config.name) return msg
+        if(msg.author === config.name || msg.author === "Jackbot [DISCORD]") return msg
         if(msg.content.toLowerCase().includes("jack")) {
             setTimeout(()=>{
                 core.pluginSend({

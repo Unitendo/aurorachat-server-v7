@@ -145,7 +145,13 @@ aurorashart - aurorashart
                         content: `you just got cooled!`
                     })
                 break
-
+                case 'jack':
+                    core.pluginSend({
+                        author: config.name,
+                        room: msg.room,
+                        content: `im jacking you.`
+                    })
+                break
                 default:
                     client.onsend({
                         author: config.name,
